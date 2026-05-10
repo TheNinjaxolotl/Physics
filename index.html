@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Physics HL Study App</title>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--surface3:#22223a;
+    --accent:#9b8ff9;--accent2:#4fd8c4;--accent3:#f7a35c;
+    --text:#eeeef5;--muted:#aaaacc;--border:#2a2a40;
+    --success:#4fd8a0;--danger:#f76c7c;--warning:#f7c35c;
+    --focus-ring:#9b8ff9;
+  }
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  #skip-link{position:absolute;top:-100px;left:0;background:var(--accent);color:#fff;padding:10px 16px;font-size:14px;font-weight:700;border-radius:0 0 8px 0;z-index:9999;transition:top .2s;text-decoration:none}
+  #skip-link:focus{top:0}
+  #app{display:flex;min-height:100vh}
+  :focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px;border-radius:4px}
+  button:focus-visible,a:focus-visible,[tabindex="0"]:focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px}
+  #sidebar{width:260px;min-width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+  .logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+  .logo h1{font-size:15px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .logo p{font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:2px;font-family:'Space Mono',monospace}
+  .nav-section{padding:12px 0}
+  .nav-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:0 20px 8px;font-family:'Space Mono',monospace}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .15s;border-left:3px solid transparent;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left;font-family:'Syne',sans-serif}
+  .nav-item:hover{color:var(--text);background:var(--surface2)}
+  .nav-item[aria-current="page"]{color:var(--accent);border-left-color:var(--accent);background:rgba(155,143,249,.1)}
+  .nav-item .num{font-family:'Space Mono',monospace;font-size:10px;width:18px;opacity:.6}
+  #main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+  #home{padding:48px 48px 64px}
+  .hero-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+  .hero-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:36px;font-weight:400}
+  .stats-row{display:flex;gap:16px;margin-bottom:40px;flex-wrap:wrap}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;min-width:120px}
+  .stat-num{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--accent)}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.05em}
+  .topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .topic-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;text-align:left;width:100%;font-family:'Syne',sans-serif;color:var(--text)}
+  .topic-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .tc-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px}
+  .tc-title{font-size:14px;font-weight:700;margin-bottom:4px}
+  .tc-sub{font-size:12px;color:var(--muted);line-height:1.5}
+  .tc-badge{display:inline-block;margin-top:8px;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;font-family:'Space Mono',monospace}
+  .badge-core{background:rgba(155,143,249,.15);color:#c4bbff}
+  .badge-ahl{background:rgba(247,163,92,.15);color:#f7b870}
+  #lesson{padding:40px 48px 64px;max-width:800px}
+  .lesson-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:28px;transition:color .15s;background:none;border:none;font-family:'Syne',sans-serif;padding:4px 8px;border-radius:6px}
+  .lesson-back:hover{color:var(--text)}
+  .lesson-tag{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+  .lesson-title{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:6px}
+  .lesson-meta{font-size:13px;color:var(--muted);margin-bottom:32px}
+  .lesson-content{font-size:15px;line-height:1.8;color:#cccce0}
+  .lesson-content h2{font-size:20px;font-weight:700;color:var(--text);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .lesson-content h3{font-size:16px;font-weight:700;color:var(--accent);margin:24px 0 8px}
+  .lesson-content p{margin-bottom:14px}
+  .lesson-content ul{margin:0 0 14px 20px}
+  .lesson-content li{margin-bottom:6px}
+  .equation-box{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0;font-family:'Space Mono',monospace;font-size:13px;overflow-x:auto}
+  .eq-label{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'Syne',sans-serif}
+  .key-box{background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:14px 18px;margin:16px 0}
+  .key-box .kb-title{font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .warn-box{background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:14px 18px;margin:16px 0}
+  .warn-box .wb-title{font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .subtopic-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+  .st-btn{padding:6px 14px;border-radius:20px;border:2px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted);font-family:'Syne',sans-serif}
+  .st-btn[aria-selected="true"],.st-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .lesson-nav-btns{display:flex;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap}
+  .btn{padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;border:2px solid transparent;font-family:'Syne',sans-serif;letter-spacing:.03em}
+  .btn-primary{background:var(--accent);color:#0a0a0f;border-color:var(--accent)}
+  .btn-primary:hover{background:#7c6ff7;border-color:#7c6ff7}
+  .btn-ghost{background:transparent;border-color:var(--border);color:var(--muted)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--text)}
+  .btn-quiz{background:rgba(247,163,92,.12);border:2px solid rgba(247,163,92,.4);color:#f7b870}
+  .btn-quiz:hover{background:rgba(247,163,92,.22)}
+  #quiz{padding:40px 48px 64px;max-width:720px}
+  .quiz-header{margin-bottom:28px}
+  .quiz-progress-track{display:flex;gap:6px;margin-bottom:12px;align-items:center}
+  .qp-dot{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
+  .qp-dot.done{background:var(--success)}
+  .qp-dot.current{background:var(--accent)}
+  .question-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:16px}
+  .q-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px}
+  .q-text{font-size:16px;font-weight:600;line-height:1.6;margin-bottom:6px}
+  .q-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{padding:12px 16px;border-radius:8px;border:2px solid var(--border);cursor:pointer;font-size:14px;transition:all .15s;display:flex;align-items:center;gap:12px;background:transparent;color:var(--text);width:100%;text-align:left;font-family:'Syne',sans-serif}
+  .option:hover:not(:disabled){border-color:var(--accent);background:rgba(155,143,249,.07)}
+  .option[aria-pressed="true"]{border-color:var(--accent);background:rgba(155,143,249,.12);color:var(--accent)}
+  .option.correct{border-color:var(--success);background:rgba(79,216,160,.1);color:var(--success)}
+  .option.wrong{border-color:var(--danger);background:rgba(247,108,124,.1);color:var(--danger)}
+  .option:disabled{cursor:default}
+  .option-letter{font-family:'Space Mono',monospace;font-size:11px;width:22px;height:22px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .explanation{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:14px;font-size:13px;color:var(--muted);line-height:1.7}
+  .exp-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;color:var(--accent2)}
+  .score-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;text-align:center;margin-bottom:24px}
+  .score-big{font-size:64px;font-weight:800;font-family:'Space Mono',monospace;line-height:1}
+  .score-label{font-size:14px;color:var(--muted);margin-top:8px}
+  .score-msg{font-size:18px;font-weight:700;margin-top:16px}
+  .quiz-topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+  .quiz-topic-btn{padding:12px 16px;background:var(--surface);border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;transition:all .2s;font-family:'Syne',sans-serif;color:var(--text)}
+  .quiz-topic-btn:hover{border-color:var(--accent3);background:rgba(247,163,92,.05)}
+  .qtb-title{font-size:13px;font-weight:700;margin-bottom:2px}
+  .qtb-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+  .loading-spinner{text-align:center;padding:40px;color:var(--muted);font-family:'Space Mono',monospace;font-size:13px}
+  .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error-box{background:rgba(247,108,124,.08);border:1px solid rgba(247,108,124,.3);border-radius:10px;padding:16px;color:#f99;font-size:13px;margin:16px 0}
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--surface)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  .katex{font-size:1em!important}
+  .katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0}
+  #live-region{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+</style>
+</head>
+<body>
+<a href="#main-content" id="skip-link">Skip to main content</a>
+<div id="live-region" aria-live="polite" aria-atomic="true"></div>
+<div id="app" role="application" aria-label="IB Physics HL Study App">
+  <nav id="sidebar" aria-label="Topic navigation">
+    <div class="logo">
+      <h1 id="site-title">PhysicsHL</h1>
+      <p aria-label="IB Diploma Programme Higher Level">IB DIPLOMA · HIGHER LEVEL</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label" id="nav-label-main">Navigate</p>
+      <ul role="list" style="list-style:none" aria-labelledby="nav-label-main">
+        <li><button class="nav-item" id="nav-home" onclick="showHome()" aria-current="page">
+          <span aria-hidden="true">◉</span> Overview
+        </button></li>
+        <li><button class="nav-item" id="nav-quiz" onclick="showQuizMenu()">
+          <span aria-hidden="true">◈</span> Practice Tests
+        </button></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label" id="nav-label-topics">Topics</p>
+      <ul role="list" style="list-style:none" id="topic-nav" aria-labelledby="nav-label-topics"></ul>
+    </div>
+  </nav>
+  <main id="main-content" tabindex="-1">
+    <div id="home" role="region" aria-labelledby="home-heading"></div>
+    <div id="lesson" style="display:none" role="region" aria-labelledby="lesson-heading"></div>
+    <div id="quiz" style="display:none" role="region" aria-label="Practice quiz"></div>
+  </main>
+</div>
+
+<script>
+const TOPICS = [
+  {id:1,title:"Measurements & Uncertainties",short:"Measurements",ahl:false,subtopics:["Measurement fundamentals","Uncertainties & errors","Vectors & scalars"],content:{
+    "Measurement fundamentals":`
+<h2>The SI System & Scientific Notation</h2>
+<p>All physical quantities in IB Physics are expressed using the <strong>International System of Units (SI)</strong>. There are seven base units from which all other units are derived.</p>
+<div class="key-box" role="note" aria-label="Key concept"><div class="kb-title">Seven SI Base Units</div>
+<p>Length — metre (m) · Mass — kilogram (kg) · Time — second (s) · Electric current — ampere (A) · Temperature — kelvin (K) · Amount of substance — mole (mol) · Luminous intensity — candela (cd)</p></div>
+<p>Scientific notation expresses any number as \\(a \\times 10^n\\) where \\(1 \\leq a < 10\\). This is essential for handling the enormous range of scales in physics — from the Planck length (\\(\\sim 10^{-35}\\) m) to the observable universe (\\(\\sim 10^{26}\\) m).</p>
+<h3>SI Prefixes</h3>
+<p>Memorise these prefixes: pico (p, \\(10^{-12}\\)), nano (n, \\(10^{-9}\\)), micro (μ, \\(10^{-6}\\)), milli (m, \\(10^{-3}\\)), kilo (k, \\(10^3\\)), mega (M, \\(10^6\\)), giga (G, \\(10^9\\)), tera (T, \\(10^{12}\\)).</p>
+<h3>Orders of Magnitude</h3>
+<p>Estimation to the nearest order of magnitude (power of 10) is a key IB skill. For example, the mass of an electron is \\(9.11 \\times 10^{-31}\\) kg, which is approximately \\(10^{-30}\\) kg to one order of magnitude.</p>`,
+    "Uncertainties & errors":`
+<h2>Uncertainties & Errors</h2>
+<p>No measurement is perfect. Understanding error analysis is critical for Paper 1 and Paper 3 in IB Physics HL.</p>
+<h3>Random vs Systematic Errors</h3>
+<div class="key-box" role="note" aria-label="Key distinction"><div class="kb-title">Key Distinction</div>
+<p><strong>Random errors</strong> cause scatter around the true value — they can be reduced by repeating measurements and averaging. <strong>Systematic errors</strong> shift all measurements in one direction — they cannot be reduced by repetition and often require recalibration.</p></div>
+<h3>Absolute, Fractional & Percentage Uncertainty</h3>
+<div class="equation-box" role="math" aria-label="Uncertainty forms"><div class="eq-label">Uncertainty Forms</div>
+$$\\text{Absolute: } \\Delta x \\qquad \\text{Fractional: } \\frac{\\Delta x}{x} \\qquad \\text{Percentage: } \\frac{\\Delta x}{x} \\times 100\\%$$
+</div>
+<h3>Propagating Uncertainties</h3>
+<div class="equation-box" role="math" aria-label="Rules for combining uncertainties"><div class="eq-label">Combining Uncertainties</div>
+$$\\text{Addition/Subtraction: } \\Delta z = \\Delta a + \\Delta b$$
+$$\\text{Multiplication/Division: } \\frac{\\Delta z}{z} = \\frac{\\Delta a}{a} + \\frac{\\Delta b}{b}$$
+$$\\text{Power: } \\frac{\\Delta z}{z} = |n| \\frac{\\Delta a}{a} \\text{ where } z = a^n$$
+</div>
+<div class="warn-box" role="note" aria-label="Exam tip"><div class="wb-title">IB Exam Tip</div>
+<p>In graph analysis, find uncertainty in gradient using the "max/min gradient" method — draw best-fit lines through the extreme points of error bars and compare the slopes.</p></div>`,
+    "Vectors & scalars":`
+<h2>Vectors & Scalars</h2>
+<p>Physical quantities are classified as either scalars (magnitude only) or vectors (magnitude and direction).</p>
+<div class="key-box" role="note" aria-label="Examples of vectors and scalars"><div class="kb-title">Examples</div>
+<p><strong>Scalars:</strong> distance, speed, mass, energy, temperature, time, pressure<br><strong>Vectors:</strong> displacement, velocity, acceleration, force, momentum, electric field</p></div>
+<h3>Vector Addition</h3>
+<p>Vectors are added geometrically (tip-to-tail) or algebraically (component-wise).</p>
+<div class="equation-box" role="math" aria-label="Component method for vector addition"><div class="eq-label">Component Method</div>
+$$R_x = A\\cos\\theta_A + B\\cos\\theta_B \\qquad R_y = A\\sin\\theta_A + B\\sin\\theta_B$$
+$$|\\mathbf{R}| = \\sqrt{R_x^2 + R_y^2}, \\quad \\theta_R = \\arctan\\left(\\frac{R_y}{R_x}\\right)$$
+</div>`
+  }},
+  {id:2,title:"Mechanics",short:"Mechanics",ahl:false,subtopics:["Kinematics","Newton's Laws & Forces","Work, Energy & Power","Momentum & Impulse"],content:{
+    "Kinematics":`
+<h2>Kinematics</h2>
+<p>Kinematics describes motion without considering its causes. Key quantities: displacement (\\(s\\)), velocity (\\(v\\)), acceleration (\\(a\\)), time (\\(t\\)).</p>
+<h3>Equations of Motion (SUVAT)</h3>
+<div class="equation-box" role="math" aria-label="Uniform acceleration equations"><div class="eq-label">Uniform Acceleration Equations</div>
+$$v = u + at \\qquad s = ut + \\tfrac{1}{2}at^2$$
+$$v^2 = u^2 + 2as \\qquad s = \\frac{(u+v)}{2}t$$
+</div>
+<div class="warn-box" role="note" aria-label="Sign convention reminder"><div class="wb-title">Sign Convention</div>
+<p>Always define a positive direction first. Upward and rightward are typically positive. Gravitational acceleration \\(g = 9.81 \\text{ m s}^{-2}\\) acts downward, so \\(a = -9.81 \\text{ m s}^{-2}\\) when upward is positive.</p></div>
+<h3>Projectile Motion</h3>
+<div class="equation-box" role="math" aria-label="Projectile motion equations"><div class="eq-label">Projectile Equations (independent components)</div>
+$$\\text{Horizontal: } x = u\\cos\\theta \\cdot t \\quad \\text{Vertical: } y = u\\sin\\theta \\cdot t - \\tfrac{1}{2}gt^2$$
+</div>`,
+    "Newton's Laws & Forces":`
+<h2>Newton's Laws of Motion</h2>
+<div class="key-box" role="note" aria-label="Newton's three laws"><div class="kb-title">Newton's Three Laws</div>
+<p><strong>1st Law:</strong> A body remains at rest or moves at constant velocity unless a resultant force acts on it.<br>
+<strong>2nd Law:</strong> Resultant force equals rate of change of momentum: \\(\\mathbf{F} = m\\mathbf{a}\\).<br>
+<strong>3rd Law:</strong> Forces occur in equal and opposite pairs on different bodies.</p></div>
+<h3>Friction</h3>
+<div class="equation-box" role="math" aria-label="Friction force equations"><div class="eq-label">Friction Forces</div>
+$$f \\leq \\mu_s N \\quad (\\text{static}) \\qquad f = \\mu_k N \\quad (\\text{kinetic})$$
+</div>
+<p>Static friction prevents motion; kinetic friction opposes it. Always \\(\\mu_s > \\mu_k\\).</p>`,
+    "Work, Energy & Power":`
+<h2>Work, Energy & Power</h2>
+<div class="equation-box" role="math" aria-label="Core energy equations"><div class="eq-label">Core Definitions</div>
+$$W = Fs\\cos\\theta \\qquad E_k = \\tfrac{1}{2}mv^2 \\qquad E_{grav} = mgh$$
+$$P = \\frac{W}{t} = Fv \\qquad \\eta = \\frac{P_{out}}{P_{in}} \\times 100\\%$$
+</div>
+<div class="key-box" role="note" aria-label="Conservation of energy principle"><div class="kb-title">Conservation of Energy</div>
+<p>Energy cannot be created or destroyed, only converted. In a closed system with no friction, total mechanical energy (KE + PE) is conserved. When friction acts: \\(E_{k,i} + E_{p,i} = E_{k,f} + E_{p,f} + W_{friction}\\).</p></div>`,
+    "Momentum & Impulse":`
+<h2>Momentum & Impulse</h2>
+<div class="equation-box" role="math" aria-label="Momentum and impulse equations"><div class="eq-label">Definitions</div>
+$$\\mathbf{p} = m\\mathbf{v} \\qquad \\mathbf{J} = \\mathbf{F}\\Delta t = \\Delta \\mathbf{p}$$
+</div>
+<div class="key-box" role="note" aria-label="Collision types"><div class="kb-title">Collision Types</div>
+<p><strong>Elastic:</strong> momentum AND kinetic energy conserved.<br>
+<strong>Inelastic:</strong> momentum conserved; KE not conserved.<br>
+<strong>Perfectly inelastic:</strong> objects stick together — maximum KE loss.</p></div>
+<div class="warn-box" role="note" aria-label="Important note on vector nature of momentum"><div class="wb-title">Vector Nature of Momentum</div>
+<p>Momentum is a vector. In 2D collisions, apply conservation separately in x and y directions.</p></div>`
+  }},
+  {id:3,title:"Thermal Physics",short:"Thermal",ahl:false,subtopics:["Temperature & Heat","Ideal Gas Laws","Thermodynamics"],content:{
+    "Temperature & Heat":`
+<h2>Temperature, Heat & Internal Energy</h2>
+<div class="key-box" role="note" aria-label="Key distinctions in thermal physics"><div class="kb-title">Key Distinctions</div>
+<p><strong>Temperature:</strong> measure of average random kinetic energy of particles (K or °C).<br>
+<strong>Internal energy:</strong> total kinetic + potential energy of all particles.<br>
+<strong>Heat (Q):</strong> energy transferred due to a temperature difference.</p></div>
+<div class="equation-box" role="math" aria-label="Thermal equations"><div class="eq-label">Thermal Equations</div>
+$$Q = mc\\Delta T \\qquad Q = mL \\qquad T(K) = T(°C) + 273.15$$
+</div>`,
+    "Ideal Gas Laws":`
+<h2>Ideal Gas Laws</h2>
+<div class="equation-box" role="math" aria-label="Ideal gas law equations"><div class="eq-label">Gas Laws</div>
+$$PV = nRT \\qquad P_1V_1/T_1 = P_2V_2/T_2 \\qquad PV = NkT$$
+$$R = 8.31 \\text{ J mol}^{-1}\\text{K}^{-1} \\qquad k_B = 1.38 \\times 10^{-23} \\text{ J K}^{-1}$$
+</div>
+<h3>Kinetic Theory</h3>
+<div class="equation-box" role="math" aria-label="Kinetic theory equations"><div class="eq-label">Average Kinetic Energy & RMS Speed</div>
+$$\\langle E_k \\rangle = \\tfrac{3}{2}k_BT \\qquad v_{rms} = \\sqrt{\\frac{3RT}{M}}$$
+</div>`,
+    "Thermodynamics":`
+<h2>Thermodynamics</h2>
+<div class="equation-box" role="math" aria-label="First law of thermodynamics"><div class="eq-label">First Law of Thermodynamics</div>
+$$\\Delta U = Q - W$$
+</div>
+<div class="warn-box" role="note" aria-label="Sign convention for thermodynamics"><div class="wb-title">Sign Convention (IB)</div>
+<p>\\(Q > 0\\): heat flows INTO the system. \\(W > 0\\): work done BY the system (expansion).</p></div>
+<div class="equation-box" role="math" aria-label="Carnot efficiency equation"><div class="eq-label">Carnot Efficiency</div>
+$$\\eta_{Carnot} = 1 - \\frac{T_C}{T_H}$$
+</div>`
+  }},
+  {id:4,title:"Waves",short:"Waves",ahl:false,subtopics:["Wave Characteristics","Wave Behaviour","Standing Waves"],content:{
+    "Wave Characteristics":`
+<h2>Wave Characteristics</h2>
+<div class="equation-box" role="math" aria-label="Wave equation"><div class="eq-label">Wave Equation</div>
+$$v = f\\lambda \\qquad T = \\frac{1}{f}$$
+</div>
+<div class="key-box" role="note" aria-label="Types of waves"><div class="kb-title">Transverse vs Longitudinal</div>
+<p><strong>Transverse:</strong> oscillation perpendicular to energy propagation (light, water waves, S-waves).<br>
+<strong>Longitudinal:</strong> oscillation parallel to propagation (sound, P-waves). Consist of compressions and rarefactions.</p></div>`,
+    "Wave Behaviour":`
+<h2>Wave Behaviour</h2>
+<h3>Refraction — Snell's Law</h3>
+<div class="equation-box" role="math" aria-label="Snell's law"><div class="eq-label">Snell's Law</div>
+$$n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2 \\qquad n = \\frac{c}{v}$$
+</div>
+<div class="key-box" role="note" aria-label="Interference conditions"><div class="kb-title">Interference Conditions</div>
+<p>Constructive: path difference = \\(n\\lambda\\). Destructive: path difference = \\((n+\\frac{1}{2})\\lambda\\). Sources must be coherent.</p></div>
+<div class="equation-box" role="math" aria-label="Young's double slit experiment equation"><div class="eq-label">Young's Double-Slit Fringe Spacing</div>
+$$\\Delta y = \\frac{\\lambda D}{d}$$
+</div>`,
+    "Standing Waves":`
+<h2>Standing Waves</h2>
+<p>Standing waves form when two identical waves travel in opposite directions and superpose. Energy is stored, not transported.</p>
+<div class="equation-box" role="math" aria-label="Harmonic frequency equations"><div class="eq-label">Harmonic Frequencies</div>
+$$\\text{String / Open pipe: } f_n = \\frac{nv}{2L} \\quad n = 1,2,3,...$$
+$$\\text{Closed pipe: } f_n = \\frac{nv}{4L} \\quad n = 1,3,5,...$$
+</div>`
+  }},
+  {id:5,title:"Electricity & Magnetism",short:"E & M",ahl:false,subtopics:["Electric Fields","Current & Circuits","Magnetic Forces","Electromagnetic Induction"],content:{
+    "Electric Fields":`
+<h2>Electric Fields & Coulomb's Law</h2>
+<div class="equation-box" role="math" aria-label="Electric field and potential equations"><div class="eq-label">Core Equations</div>
+$$F = \\frac{kq_1q_2}{r^2} \\quad k = 8.99 \\times 10^9 \\text{ N m}^2\\text{C}^{-2}$$
+$$E = \\frac{kQ}{r^2} \\qquad V = \\frac{kQ}{r} \\qquad E = -\\frac{\\Delta V}{\\Delta r}$$
+</div>
+<div class="equation-box" role="math" aria-label="Parallel plate capacitor equations"><div class="eq-label">Parallel Plate Capacitor</div>
+$$C = \\frac{\\varepsilon_0 A}{d} \\qquad Q = CV \\qquad U = \\frac{1}{2}CV^2$$
+</div>`,
+    "Current & Circuits":`
+<h2>Current, Resistance & Circuits</h2>
+<div class="equation-box" role="math" aria-label="Circuit fundamental equations"><div class="eq-label">Circuit Fundamentals</div>
+$$I = \\frac{\\Delta Q}{\\Delta t} \\qquad V = IR \\qquad P = IV = I^2R = \\frac{V^2}{R}$$
+</div>
+<div class="key-box" role="note" aria-label="Kirchhoff's laws"><div class="kb-title">Kirchhoff's Laws</div>
+<p><strong>KCL:</strong> \\(\\sum I_{in} = \\sum I_{out}\\) at any junction.<br>
+<strong>KVL:</strong> \\(\\sum \\varepsilon = \\sum IR\\) around any closed loop.</p></div>
+<div class="equation-box" role="math" aria-label="Resistor combinations"><div class="eq-label">Resistor Combinations</div>
+$$\\text{Series: } R_T = R_1 + R_2 + ... \\qquad \\text{Parallel: } \\frac{1}{R_T} = \\frac{1}{R_1} + \\frac{1}{R_2} + ...$$
+</div>`,
+    "Magnetic Forces":`
+<h2>Magnetic Fields & Forces</h2>
+<div class="equation-box" role="math" aria-label="Magnetic force equations"><div class="eq-label">Magnetic Force Equations</div>
+$$F = qvB\\sin\\theta \\qquad F = BIL\\sin\\theta$$
+$$r = \\frac{mv}{qB} \\quad \\text{(cyclotron radius)}$$
+</div>`,
+    "Electromagnetic Induction":`
+<h2>Electromagnetic Induction</h2>
+<div class="key-box" role="note" aria-label="Faraday's and Lenz's laws"><div class="kb-title">Faraday's & Lenz's Laws</div>
+<p><strong>Faraday:</strong> Induced EMF equals the rate of change of magnetic flux linkage: \\(\\varepsilon = -N\\frac{d\\Phi}{dt}\\)<br>
+<strong>Lenz:</strong> Induced current opposes the change in flux (the negative sign).</p></div>
+<div class="equation-box" role="math" aria-label="Transformer equation"><div class="eq-label">Ideal Transformer</div>
+$$\\frac{V_s}{V_p} = \\frac{N_s}{N_p} = \\frac{I_p}{I_s}$$
+</div>`
+  }},
+  {id:6,title:"Circular & Gravitational Motion",short:"Circular & Gravity",ahl:true,subtopics:["Circular Motion","Gravitational Fields"],content:{
+    "Circular Motion":`
+<h2>Circular Motion (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Circular motion equations"><div class="eq-label">Circular Motion Equations</div>
+$$v = \\omega r \\qquad \\omega = \\frac{2\\pi}{T} = 2\\pi f$$
+$$a_c = \\frac{v^2}{r} = \\omega^2 r \\qquad F_c = \\frac{mv^2}{r}$$
+</div>
+<div class="warn-box" role="note" aria-label="Common exam error warning"><div class="wb-title">Common Exam Error</div>
+<p>Do NOT draw centripetal force as a separate arrow on a free body diagram. Identify which actual forces (or their components) provide centripetal acceleration.</p></div>`,
+    "Gravitational Fields":`
+<h2>Gravitational Fields (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Gravitational field equations"><div class="eq-label">Gravitational Equations</div>
+$$F = \\frac{Gm_1m_2}{r^2} \\quad G = 6.67 \\times 10^{-11} \\text{ N m}^2\\text{kg}^{-2}$$
+$$g = \\frac{GM}{r^2} \\qquad V_g = -\\frac{GM}{r}$$
+$$T^2 = \\frac{4\\pi^2 r^3}{GM} \\quad \\text{(Kepler's Third Law)}$$
+</div>
+<div class="equation-box" role="math" aria-label="Escape speed equation"><div class="eq-label">Escape Speed</div>
+$$v_{esc} = \\sqrt{\\frac{2GM}{R}}$$
+</div>`
+  }},
+  {id:7,title:"Atomic & Nuclear Physics",short:"Atomic & Nuclear",ahl:false,subtopics:["Atomic Models","Radioactivity","Nuclear Reactions"],content:{
+    "Atomic Models":`
+<h2>Atomic Models & Quantum Ideas</h2>
+<div class="equation-box" role="math" aria-label="Photoelectric effect equation"><div class="eq-label">Einstein's Photoelectric Equation</div>
+$$hf = \\phi + E_{k,max} \\qquad h = 6.63 \\times 10^{-34} \\text{ J s}$$
+</div>
+<div class="equation-box" role="math" aria-label="Photon emission equation"><div class="eq-label">Photon Emission/Absorption</div>
+$$hf = E_2 - E_1 \\qquad \\lambda = \\frac{hc}{E_2 - E_1}$$
+</div>`,
+    "Radioactivity":`
+<h2>Radioactivity</h2>
+<div class="key-box" role="note" aria-label="Types of nuclear radiation"><div class="kb-title">Three Types of Radiation</div>
+<p><strong>Alpha (α):</strong> helium-4 nucleus; stopped by paper; highly ionising.<br>
+<strong>Beta (β⁻):</strong> electron from neutron decay; stopped by aluminium.<br>
+<strong>Gamma (γ):</strong> high-energy photon; stopped by thick lead; least ionising.</p></div>
+<div class="equation-box" role="math" aria-label="Radioactive decay equations"><div class="eq-label">Radioactive Decay</div>
+$$N = N_0 e^{-\\lambda t} \\qquad t_{1/2} = \\frac{\\ln 2}{\\lambda} \\qquad A = \\lambda N$$
+</div>`,
+    "Nuclear Reactions":`
+<h2>Nuclear Reactions & Mass-Energy</h2>
+<div class="equation-box" role="math" aria-label="Mass-energy equivalence and binding energy"><div class="eq-label">Mass-Energy & Binding Energy</div>
+$$E = mc^2 \\qquad 1\\text{ u} = 931.5 \\text{ MeV/c}^2$$
+$$E_B = \\Delta m \\cdot c^2 \\quad \\text{where } \\Delta m = [Zm_p + (A-Z)m_n] - m_{nucleus}$$
+</div>`
+  }},
+  {id:8,title:"Energy Production",short:"Energy",ahl:false,subtopics:["Energy Sources","Thermal Power","Radiation & Climate"],content:{
+    "Energy Sources":`
+<h2>Energy Sources</h2>
+<div class="key-box" role="note" aria-label="Renewable versus non-renewable energy"><div class="kb-title">Renewable vs Non-renewable</div>
+<p><strong>Fossil fuels (non-renewable):</strong> coal, oil, gas — high energy density, reliable, but CO₂ emissions.<br>
+<strong>Nuclear fission:</strong> very high energy density, no CO₂, but radioactive waste.<br>
+<strong>Renewables:</strong> solar, wind, hydro, tidal — low emissions but variable output.</p></div>`,
+    "Thermal Power":`
+<h2>Thermal Power Stations</h2>
+<div class="equation-box" role="math" aria-label="Thermal efficiency equation"><div class="eq-label">Thermal Efficiency</div>
+$$\\eta = \\frac{P_{electrical}}{P_{thermal}} \\leq \\eta_{Carnot} = 1 - \\frac{T_C}{T_H}$$
+</div>
+<div class="equation-box" role="math" aria-label="Solar power intensity equation"><div class="eq-label">Solar Intensity</div>
+$$P_{incident} = I \\cdot A \\cdot \\cos\\theta \\qquad \\text{Solar constant} \\approx 1360 \\text{ W m}^{-2}$$
+</div>`,
+    "Radiation & Climate":`
+<h2>Radiation, Greenhouse Effect & Climate</h2>
+<div class="equation-box" role="math" aria-label="Stefan-Boltzmann law and Wien's displacement law"><div class="eq-label">Stefan-Boltzmann & Wien's Law</div>
+$$P = \\sigma A T^4 \\qquad \\sigma = 5.67 \\times 10^{-8} \\text{ W m}^{-2}\\text{K}^{-4}$$
+$$\\lambda_{max} T = 2.90 \\times 10^{-3} \\text{ m K}$$
+</div>`
+  }},
+  {id:9,title:"Wave Phenomena (AHL)",short:"Wave Phenomena",ahl:true,subtopics:["Doppler Effect","Single Slit Diffraction","Resolution & Polarisation"],content:{
+    "Doppler Effect":`
+<h2>Doppler Effect (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Doppler effect equation"><div class="eq-label">Doppler Equation</div>
+$$f_{obs} = f_s\\left(\\frac{v \\pm v_o}{v \\mp v_s}\\right) \\qquad z = \\frac{\\Delta\\lambda}{\\lambda} \\approx \\frac{v}{c}$$
+</div>
+<p>Upper signs when source/observer approach; lower when receding. Observed frequency increases as source approaches.</p>`,
+    "Single Slit Diffraction":`
+<h2>Single Slit Diffraction (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Single slit diffraction minima equation"><div class="eq-label">Single Slit Minima</div>
+$$b\\sin\\theta = m\\lambda \\quad m = \\pm 1, \\pm 2, ...$$
+</div>
+<p>Narrower slit produces wider central maximum. The single-slit envelope modulates the double-slit interference pattern.</p>`,
+    "Resolution & Polarisation":`
+<h2>Resolution & Polarisation (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Rayleigh criterion and Malus's law"><div class="eq-label">Rayleigh Criterion & Malus's Law</div>
+$$\\theta_{min} = 1.22 \\frac{\\lambda}{D} \\qquad I = I_0 \\cos^2\\theta$$
+</div>`
+  }},
+  {id:10,title:"Fields & Relativity (AHL)",short:"Fields & Relativity",ahl:true,subtopics:["Electric Potential","Special Relativity"],content:{
+    "Electric Potential":`
+<h2>Electric Potential & Field (AHL)</h2>
+<div class="equation-box" role="math" aria-label="Electric field and potential equations"><div class="eq-label">Electric Field & Potential</div>
+$$V = \\frac{kQ}{r} \\qquad \\mathbf{E} = -\\frac{dV}{dr} \\qquad W = q\\Delta V$$
+$$C = \\frac{\\kappa \\varepsilon_0 A}{d} \\quad \\text{(with dielectric constant } \\kappa\\text{)}$$
+</div>`,
+    "Special Relativity":`
+<h2>Special Relativity (AHL)</h2>
+<div class="key-box" role="note" aria-label="Einstein's two postulates"><div class="kb-title">Einstein's Two Postulates (1905)</div>
+<p>1. The laws of physics are identical in all inertial frames.<br>
+2. The speed of light in a vacuum \\(c\\) is the same for all observers in all inertial frames.</p></div>
+<div class="equation-box" role="math" aria-label="Lorentz factor and relativistic effects"><div class="eq-label">Lorentz Factor & Relativistic Effects</div>
+$$\\gamma = \\frac{1}{\\sqrt{1 - v^2/c^2}} \\qquad \\Delta t' = \\gamma \\Delta t_0 \\qquad L' = \\frac{L_0}{\\gamma}$$
+$$p = \\gamma mv \\qquad E = \\gamma mc^2 \\qquad E^2 = (pc)^2 + (mc^2)^2$$
+</div>`
+  }}
+];
+
+let currentView='home',currentTopic=null,currentSubtopic=null;
+let quizState={questions:[],current:0,answers:[],loading:false,topic:null};
+
+function announce(msg){
+  const r=document.getElementById('live-region');
+  r.textContent='';
+  setTimeout(()=>{r.textContent=msg;},50);
+}
+
+function focusMain(){
+  const m=document.getElementById('main-content');
+  m.focus();
+}
+
+function renderTopicNav(){
+  const nav=document.getElementById('topic-nav');
+  nav.innerHTML=TOPICS.map(t=>`
+    <li><button class="nav-item" id="nav-topic-${t.id}" onclick="showTopic(${t.id})"
+      aria-label="Topic ${t.id}: ${t.title}${t.ahl?' — Additional Higher Level':''}">
+      <span class="num" aria-hidden="true">${String(t.id).padStart(2,'0')}</span>
+      <span style="flex:1">${t.short}</span>
+      ${t.ahl?`<span style="font-size:9px;color:var(--accent3);font-family:'Space Mono',monospace" aria-label="Additional Higher Level">AHL</span>`:''}
+    </button></li>
+  `).join('');
+}
+
+function setActiveNav(id){
+  document.querySelectorAll('.nav-item').forEach(el=>el.removeAttribute('aria-current'));
+  const el=document.getElementById('nav-'+id);
+  if(el) el.setAttribute('aria-current','page');
+}
+
+function showHome(){
+  currentView='home';setActiveNav('home');
+  document.getElementById('home').style.display='block';
+  document.getElementById('lesson').style.display='none';
+  document.getElementById('quiz').style.display='none';
+  renderHome();announce('Overview page loaded');focusMain();
+}
+
+function renderHome(){
+  document.getElementById('home').innerHTML=`
+    <h2 id="home-heading" class="sr-only">IB Physics HL — Overview</h2>
+    <p class="hero-tag" aria-hidden="true">IB Diploma Programme</p>
+    <p style="font-size:42px;font-weight:800;line-height:1.1;margin-bottom:16px">
+      Master <span style="color:var(--accent)">Physics HL</span><br>from first principles
+    </p>
+    <p class="hero-sub">Deep conceptual explanations, key equations, and AI-powered practice tests for every topic in the IB Physics Higher Level syllabus.</p>
+    <div class="stats-row" role="list" aria-label="Course statistics">
+      <div class="stat-card" role="listitem"><div class="stat-num" aria-label="10 topic areas">10</div><div class="stat-label">Topic Areas</div></div>
+      <div class="stat-card" role="listitem"><div class="stat-num" aria-label="30 or more subtopics">30+</div><div class="stat-label">Subtopics</div></div>
+      <div class="stat-card" role="listitem"><div class="stat-num" aria-label="Unlimited practice questions">∞</div><div class="stat-label">Practice Questions</div></div>
+      <div class="stat-card" role="listitem"><div class="stat-num" aria-label="Full Higher Level syllabus">HL</div><div class="stat-label">Full Syllabus</div></div>
+    </div>
+    <h2 style="font-size:16px;font-weight:700;margin-bottom:16px;color:var(--muted);letter-spacing:.05em" id="topics-heading">Topics</h2>
+    <div class="topic-grid" role="list" aria-labelledby="topics-heading">
+      ${TOPICS.map(t=>`
+        <button class="topic-card" role="listitem" onclick="showTopic(${t.id})"
+          aria-label="Topic ${t.id}: ${t.title}. ${t.ahl?'Additional Higher Level.':'Core topic.'} Subtopics: ${t.subtopics.join(', ')}">
+          <div class="tc-num" aria-hidden="true">TOPIC ${String(t.id).padStart(2,'0')}</div>
+          <div class="tc-title">${t.title}</div>
+          <div class="tc-sub" aria-hidden="true">${t.subtopics.slice(0,2).join(' · ')}${t.subtopics.length>2?'...':''}</div>
+          <span class="tc-badge ${t.ahl?'badge-ahl':'badge-core'}" aria-hidden="true">${t.ahl?'AHL':'CORE'}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function showTopic(id){
+  const topic=TOPICS.find(t=>t.id===id);
+  if(!topic) return;
+  currentTopic=topic;currentSubtopic=topic.subtopics[0];currentView='lesson';
+  setActiveNav(`topic-${id}`);
+  document.getElementById('home').style.display='none';
+  document.getElementById('lesson').style.display='block';
+  document.getElementById('quiz').style.display='none';
+  renderLesson();announce(`Loaded topic: ${topic.title}`);focusMain();
+}
+
+function renderLesson(){
+  const t=currentTopic;
+  const content=t.content[currentSubtopic]||'<p>Content coming soon.</p>';
+  const currentIdx=t.subtopics.indexOf(currentSubtopic);
+  document.getElementById('lesson').innerHTML=`
+    <button class="lesson-back" onclick="showHome()" aria-label="Go back to overview">← Back to overview</button>
+    <p class="lesson-tag" aria-hidden="true">TOPIC ${String(t.id).padStart(2,'0')} · ${t.ahl?'AHL':'CORE'}</p>
+    <h2 id="lesson-heading" class="lesson-title">${t.title}</h2>
+    <p class="lesson-meta">${t.subtopics.length} subtopics · IB Physics HL</p>
+    <div role="tablist" aria-label="Subtopics" class="subtopic-nav">
+      ${t.subtopics.map((st,i)=>`
+        <button class="st-btn" role="tab"
+          aria-selected="${st===currentSubtopic?'true':'false'}"
+          aria-controls="subtopic-panel" id="tab-${i}"
+          onclick="switchSubtopic('${st.replace(/'/g,"\\'")}')"> ${st}</button>
+      `).join('')}
+    </div>
+    <div class="lesson-content" id="subtopic-panel" role="tabpanel"
+      aria-labelledby="tab-${currentIdx}" aria-live="polite">${content}</div>
+    <div class="lesson-nav-btns">
+      <button class="btn btn-quiz" onclick="startQuiz(${t.id})"
+        aria-label="Start practice test for ${t.title}">Practice Test for this Topic</button>
+      ${currentIdx<t.subtopics.length-1?`
+        <button class="btn btn-ghost" onclick="nextSubtopic()"
+          aria-label="Next subtopic: ${t.subtopics[currentIdx+1]}">
+          Next: ${t.subtopics[currentIdx+1]} →
+        </button>`:''}
+    </div>
+  `;
+  if(typeof renderMathInElement!=='undefined'){
+    const panel=document.getElementById('subtopic-panel');
+    if(panel) renderMathInElement(panel,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});
+  }
+}
+
+function switchSubtopic(st){currentSubtopic=st;renderLesson();announce(`Showing subtopic: ${st}`);}
+function nextSubtopic(){
+  const idx=currentTopic.subtopics.indexOf(currentSubtopic);
+  if(idx<currentTopic.subtopics.length-1){currentSubtopic=currentTopic.subtopics[idx+1];renderLesson();announce(`Showing subtopic: ${currentSubtopic}`);}
+}
+
+function showQuizMenu(){
+  currentView='quiz';setActiveNav('quiz');
+  document.getElementById('home').style.display='none';
+  document.getElementById('lesson').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  quizState={questions:[],current:0,answers:[],loading:false,topic:null};
+  document.getElementById('quiz').innerHTML=`
+    <button class="lesson-back" onclick="showHome()" aria-label="Go back to overview">← Back to overview</button>
+    <h2 class="lesson-title">Practice Tests</h2>
+    <p style="color:var(--muted);margin-bottom:28px;font-size:14px">AI-generated IB Physics HL questions. Select a topic to begin.</p>
+    <div class="quiz-topic-grid" role="list" aria-label="Quiz topic selection">
+      ${TOPICS.map(t=>`
+        <button class="quiz-topic-btn" role="listitem" onclick="startQuiz(${t.id})"
+          aria-label="Start quiz on Topic ${t.id}: ${t.title}">
+          <div class="qtb-num" aria-hidden="true">TOPIC ${String(t.id).padStart(2,'0')}</div>
+          <div class="qtb-title">${t.title}</div>
+        </button>
+      `).join('')}
+      <button class="quiz-topic-btn" onclick="startQuiz(0)" role="listitem"
+        style="border-color:rgba(155,143,249,.3)"
+        aria-label="Start mixed quiz covering all topics">
+        <div class="qtb-num" style="color:var(--accent)" aria-hidden="true">MIXED</div>
+        <div class="qtb-title">Full Paper — All Topics</div>
+      </button>
+    </div>
+  `;
+  announce('Practice Tests page loaded');focusMain();
+}
+
+async function startQuiz(topicId){
+  currentView='quiz';setActiveNav('quiz');
+  document.getElementById('home').style.display='none';
+  document.getElementById('lesson').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  quizState={questions:[],current:0,answers:[],loading:true,topic:topicId===0?null:TOPICS.find(t=>t.id===topicId)};
+  document.getElementById('quiz').innerHTML=`
+    <button class="lesson-back" onclick="showQuizMenu()" aria-label="Cancel and go back to quiz menu">← Back to tests</button>
+    <div class="loading-spinner" role="status" aria-live="polite" aria-label="Loading questions">
+      <div class="spinner" aria-hidden="true"></div>
+      Generating IB-style questions...
+    </div>
+  `;
+  announce('Generating quiz questions, please wait');
+  const topic=quizState.topic;
+  const topicDesc=topic?`${topic.title} (covering: ${topic.subtopics.join(', ')})`:
+    'all IB Physics HL topics (Measurements, Mechanics, Thermal Physics, Waves, Electricity & Magnetism, Circular & Gravitational Motion, Atomic & Nuclear Physics, Energy Production, Wave Phenomena AHL, Fields & Special Relativity AHL)';
+  const prompt=`You are an expert IB Physics HL examiner. Generate exactly 6 multiple-choice questions about ${topicDesc}.
+
+Requirements:
+- IB Physics HL Paper 1 difficulty
+- Mix of conceptual and calculation questions
+- Each question has exactly 4 options (A, B, C, D) with only one correct
+- Provide a clear explanation for the correct answer
+
+Respond ONLY with a JSON array (no markdown, no backticks):
+[{"question":"...","context":"...","options":["A) ...","B) ...","C) ...","D) ..."],"correct":0,"explanation":"..."}]
+
+"correct" is the 0-based index of the correct option. "context" can be empty string.`;
+  try{
+    const response=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2000,messages:[{role:"user",content:prompt}]})
+    });
+    const data=await response.json();
+    const text=data.content?.map(b=>b.text||'').join('')||'';
+    quizState.questions=JSON.parse(text.replace(/```json|```/g,'').trim());
+    quizState.loading=false;
+    renderQuiz();announce('Questions ready. Question 1 of 6.');
+  }catch(e){
+    document.getElementById('quiz').innerHTML=`
+      <button class="lesson-back" onclick="showQuizMenu()" aria-label="Go back to quiz menu">← Back to tests</button>
+      <div class="error-box" role="alert">Could not generate questions. Please try again.</div>
+      <button class="btn btn-primary" onclick="startQuiz(${topicId})">Retry</button>
+    `;
+    announce('Error generating questions');
+  }
+}
+
+function renderQuiz(){
+  const q=quizState.questions[quizState.current];
+  if(!q) return;
+  const answered=quizState.answers[quizState.current]!==undefined;
+  const selected=quizState.answers[quizState.current];
+  const total=quizState.questions.length;
+  const isCorrect=answered&&selected===q.correct;
+  document.getElementById('quiz').innerHTML=`
+    <button class="lesson-back" onclick="showQuizMenu()" aria-label="Exit quiz and go back to quiz menu">← Back to tests</button>
+    <div class="quiz-header">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px" aria-live="polite">
+        ${quizState.topic?quizState.topic.title:'Mixed Topics'} — Question ${quizState.current+1} of ${total}
+      </p>
+      <div class="quiz-progress-track" role="progressbar"
+        aria-valuenow="${quizState.current+1}" aria-valuemin="1" aria-valuemax="${total}"
+        aria-label="Question ${quizState.current+1} of ${total}">
+        ${quizState.questions.map((_,i)=>`<div class="qp-dot ${i<quizState.current?'done':i===quizState.current?'current':''}" aria-hidden="true"></div>`).join('')}
+      </div>
+    </div>
+    <div class="question-card" role="region" aria-label="Question ${quizState.current+1}">
+      <p class="q-num" aria-hidden="true">Q${quizState.current+1}</p>
+      <p class="q-text" id="question-text">${q.question}</p>
+      ${q.context?`<p class="q-sub">${q.context}</p>`:''}
+      <div class="options" role="group" aria-labelledby="question-text">
+        ${q.options.map((opt,i)=>{
+          let cls='option',status='';
+          if(answered){
+            if(i===q.correct){cls+=' correct';status=' (correct answer)';}
+            else if(i===selected&&selected!==q.correct){cls+=' wrong';status=' (your incorrect answer)';}
+          }
+          return `<button class="${cls}" ${answered?'disabled':''}
+            onclick="${answered?'':'selectOption('+i+')'}"
+            aria-pressed="${answered&&i===selected?'true':'false'}"
+            aria-label="Option ${['A','B','C','D'][i]}: ${opt.replace(/^[ABCD]\)\s*/,'')}${status}">
+            <span class="option-letter" aria-hidden="true">${['A','B','C','D'][i]}</span>
+            ${opt.replace(/^[ABCD]\)\s*/,'')}
+          </button>`;
+        }).join('')}
+      </div>
+      ${answered?`<div class="explanation" role="alert" aria-label="${isCorrect?'Correct':'Incorrect'} answer explanation" tabindex="-1">
+        <div class="exp-title">${isCorrect?'Correct':'Incorrect'}</div>${q.explanation}
+      </div>`:''}
+    </div>
+    ${answered?`<div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+      ${quizState.current<total-1
+        ?`<button class="btn btn-primary" onclick="nextQuestion()" aria-label="Go to question ${quizState.current+2}">Next Question →</button>`
+        :`<button class="btn btn-primary" onclick="showResults()" aria-label="View your final results">See Results →</button>`}
+    </div>`:''}
+  `;
+  if(typeof renderMathInElement!=='undefined')
+    renderMathInElement(document.getElementById('quiz'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});
+  if(answered){const exp=document.querySelector('.explanation');if(exp)exp.focus();}
+}
+
+function selectOption(i){
+  if(quizState.answers[quizState.current]!==undefined) return;
+  quizState.answers[quizState.current]=i;
+  const q=quizState.questions[quizState.current];
+  announce((i===q.correct?'Correct! ':'Incorrect. ')+q.explanation);
+  renderQuiz();
+}
+
+function nextQuestion(){quizState.current++;renderQuiz();announce(`Question ${quizState.current+1} of ${quizState.questions.length}`);}
+
+function showResults(){
+  const correct=quizState.answers.filter((a,i)=>a===quizState.questions[i].correct).length;
+  const pct=Math.round((correct/quizState.questions.length)*100);
+  const msg=pct>=80?'Excellent! Ready for the exam.':pct>=60?'Good work — keep reviewing.':'Keep studying, you have got this.';
+  const col=pct>=80?'var(--success)':pct>=60?'var(--warning)':'var(--danger)';
+  announce(`Quiz complete. You scored ${pct}% — ${correct} out of ${quizState.questions.length} correct. ${msg}`);
+  document.getElementById('quiz').innerHTML=`
+    <button class="lesson-back" onclick="showQuizMenu()" aria-label="Go back to quiz menu">← Back to tests</button>
+    <div class="score-card" role="region" aria-label="Quiz results">
+      <div class="score-big" style="color:${col}" aria-label="${pct} percent">${pct}%</div>
+      <div class="score-label">${correct} / ${quizState.questions.length} correct</div>
+      <div class="score-msg">${msg}</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="startQuiz(${quizState.topic?quizState.topic.id:0})" aria-label="Retry this quiz with new questions">Retry This Test</button>
+      <button class="btn btn-ghost" onclick="reviewAnswers()" aria-label="Review all answers with explanations">Review Answers</button>
+      <button class="btn btn-ghost" onclick="showQuizMenu()" aria-label="Go back to choose a different topic">Choose Another Topic</button>
+    </div>
+  `;
+}
+
+function reviewAnswers(){
+  const allQ=quizState.questions.map((q,i)=>{
+    const sel=quizState.answers[i];const correct=sel===q.correct;
+    return `<div class="question-card" style="margin-bottom:16px" role="region" aria-label="Question ${i+1}: ${correct?'Correct':'Incorrect'}">
+      <p class="q-num" style="color:${correct?'var(--success)':'var(--danger)'}" aria-hidden="true">${correct?'Correct':'Incorrect'} — Q${i+1}</p>
+      <p class="q-text">${q.question}</p>
+      ${q.context?`<p class="q-sub">${q.context}</p>`:''}
+      <div class="options" role="list">
+        ${q.options.map((opt,j)=>{
+          let cls='option',status='';
+          if(j===q.correct){cls+=' correct';status=' — correct answer';}
+          else if(j===sel&&!correct){cls+=' wrong';status=' — your answer (incorrect)';}
+          return `<div class="${cls}" role="listitem" aria-label="${opt.replace(/^[ABCD]\)\s*/,'')}${status}">
+            <span class="option-letter" aria-hidden="true">${['A','B','C','D'][j]}</span>
+            ${opt.replace(/^[ABCD]\)\s*/,'')}
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="explanation"><div class="exp-title">Explanation</div>${q.explanation}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('quiz').innerHTML=`
+    <button class="lesson-back" onclick="showResults()" aria-label="Go back to results summary">← Back to results</button>
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:24px">Review All Answers</h2>${allQ}
+  `;
+  if(typeof renderMathInElement!=='undefined')
+    renderMathInElement(document.getElementById('quiz'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});
+  announce('Showing all answers with explanations');
+}
+
+renderTopicNav();showHome();
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&(currentView==='lesson'||currentView==='quiz')) showHome();
+});
+</script>
+</body>
+</html>
