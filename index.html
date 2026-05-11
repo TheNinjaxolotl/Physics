@@ -17,11 +17,12 @@
     --success:#4fd8a0;--danger:#f76c7c;--warning:#f7c35c;
     --focus-ring:#9b8ff9;
   }
-  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+  html,body{height:100%;width:100%}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);height:100%;width:100%;overflow-x:hidden}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   #skip-link{position:absolute;top:-100px;left:0;background:var(--accent);color:#fff;padding:10px 16px;font-size:14px;font-weight:700;border-radius:0 0 8px 0;z-index:9999;transition:top .2s;text-decoration:none}
   #skip-link:focus{top:0}
-  #app{display:flex;min-height:100vh}
+  #app{display:flex;width:100%;min-height:100vh;position:relative}
   :focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px;border-radius:4px}
   button:focus-visible,a:focus-visible,[tabindex="0"]:focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px}
   #sidebar{width:260px;min-width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
@@ -34,15 +35,15 @@
   .nav-item:hover{color:var(--text);background:var(--surface2)}
   .nav-item[aria-current="page"]{color:var(--accent);border-left-color:var(--accent);background:rgba(155,143,249,.1)}
   .nav-item .num{font-family:'Space Mono',monospace;font-size:10px;width:18px;opacity:.6}
-  #main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh}
-  #home{padding:48px 48px 64px}
+  #main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh;width:calc(100% - 260px);overflow-y:auto}
+  #home{padding:48px 56px 64px;width:100%}
   .hero-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
   .hero-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:36px;font-weight:400}
   .stats-row{display:flex;gap:16px;margin-bottom:40px;flex-wrap:wrap}
   .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;min-width:120px}
   .stat-num{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--accent)}
   .stat-label{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.05em}
-  .topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
   .topic-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;text-align:left;width:100%;font-family:'Syne',sans-serif;color:var(--text)}
   .topic-card:hover{border-color:var(--accent);transform:translateY(-2px)}
   .tc-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px}
@@ -51,7 +52,7 @@
   .tc-badge{display:inline-block;margin-top:8px;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;font-family:'Space Mono',monospace}
   .badge-core{background:rgba(155,143,249,.15);color:#c4bbff}
   .badge-ahl{background:rgba(247,163,92,.15);color:#f7b870}
-  #lesson{padding:40px 48px 64px;max-width:800px}
+  #lesson{padding:40px 56px 64px;width:100%;max-width:900px}
   .lesson-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:28px;transition:color .15s;background:none;border:none;font-family:'Syne',sans-serif;padding:4px 8px;border-radius:6px}
   .lesson-back:hover{color:var(--text)}
   .lesson-tag{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
@@ -80,7 +81,7 @@
   .btn-ghost:hover{border-color:var(--accent);color:var(--text)}
   .btn-quiz{background:rgba(247,163,92,.12);border:2px solid rgba(247,163,92,.4);color:#f7b870}
   .btn-quiz:hover{background:rgba(247,163,92,.22)}
-  #quiz{padding:40px 48px 64px;max-width:720px}
+  #quiz{padding:40px 56px 64px;max-width:860px;width:100%}
   .quiz-header{margin-bottom:28px}
   .quiz-progress-track{display:flex;gap:6px;margin-bottom:12px;align-items:center}
   .qp-dot{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
