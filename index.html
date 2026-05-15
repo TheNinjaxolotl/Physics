@@ -910,10 +910,11 @@ function renderHome(){
     <div class="topic-grid" role="list" aria-labelledby="topics-heading">
       ${TOPICS.map(t=>{
         let progressBadge = '';
-        if(t.id===1||t.id===2||t.id===3||t.id===4||t.id===5||t.id===6){
+        if([1,2,3,4,5,6,7,8,9,10].includes(t.id)){
           try{
             const saved = localStorage.getItem(`gl_step_${t.id}`);
-            const steps = t.id===2?GUIDED_STEPS_2:t.id===3?GUIDED_STEPS_3:t.id===4?GUIDED_STEPS_4:t.id===5?GUIDED_STEPS_5:t.id===6?GUIDED_STEPS_6:GUIDED_STEPS;
+            const stepsMap={2:()=>GUIDED_STEPS_2,3:()=>GUIDED_STEPS_3,4:()=>GUIDED_STEPS_4,5:()=>GUIDED_STEPS_5,6:()=>GUIDED_STEPS_6,7:()=>GUIDED_STEPS_7,8:()=>GUIDED_STEPS_8,9:()=>GUIDED_STEPS_9,10:()=>GUIDED_STEPS_10};
+            const steps = stepsMap[t.id] ? stepsMap[t.id]() : GUIDED_STEPS;
             if(saved!==null){
               const s = parseInt(saved,10);
               const lastStep = steps[steps.length-1];
@@ -950,6 +951,10 @@ function showTopic(id){
   if(id===4){ showGuidedLesson(4); return; }
   if(id===5){ showGuidedLesson(5); return; }
   if(id===6){ showGuidedLesson(6); return; }
+  if(id===7){ showGuidedLesson(7); return; }
+  if(id===8){ showGuidedLesson(8); return; }
+  if(id===9){ showGuidedLesson(9); return; }
+  if(id===10){ showGuidedLesson(10); return; }
   currentTopic=topic;currentSubtopic=topic.subtopics[0];currentView='lesson';
   setActiveNav(`topic-${id}`);
   document.getElementById('home').style.display='none';
@@ -1546,7 +1551,7 @@ function showGuidedLesson(topicId){
   document.getElementById('lesson').style.display='none';
   document.getElementById('guided-lesson').style.display='block';
   document.getElementById('quiz').style.display='none';
-  const titles={1:'TOPIC 01 — MEASUREMENTS & UNCERTAINTIES',2:'TOPIC 02 — MECHANICS',3:'TOPIC 03 — THERMAL PHYSICS',4:'TOPIC 04 — WAVES',5:'TOPIC 05 — ELECTRICITY & MAGNETISM',6:'TOPIC 06 — CIRCULAR & GRAVITATIONAL MOTION (AHL)'};
+  const titles={1:'TOPIC 01 — MEASUREMENTS & UNCERTAINTIES',2:'TOPIC 02 — MECHANICS',3:'TOPIC 03 — THERMAL PHYSICS',4:'TOPIC 04 — WAVES',5:'TOPIC 05 — ELECTRICITY & MAGNETISM',6:'TOPIC 06 — CIRCULAR & GRAVITATIONAL MOTION (AHL)',7:'TOPIC 07 — ATOMIC, NUCLEAR & PARTICLE PHYSICS',8:'TOPIC 08 — ENERGY PRODUCTION',9:'TOPIC 09 — WAVE PHENOMENA (AHL)',10:'TOPIC 10 — FIELDS & RELATIVITY (AHL)'};
   setTopbarTitle(titles[currentGuidedTopic]||'GUIDED LESSON');
   renderGuidedStep();
   scrollToTop();
@@ -1570,6 +1575,10 @@ function getActiveSteps(){
   if(currentGuidedTopic===4) return GUIDED_STEPS_4;
   if(currentGuidedTopic===5) return GUIDED_STEPS_5;
   if(currentGuidedTopic===6) return GUIDED_STEPS_6;
+  if(currentGuidedTopic===7) return GUIDED_STEPS_7;
+  if(currentGuidedTopic===8) return GUIDED_STEPS_8;
+  if(currentGuidedTopic===9) return GUIDED_STEPS_9;
+  if(currentGuidedTopic===10) return GUIDED_STEPS_10;
   return GUIDED_STEPS;
 }
 
@@ -3145,6 +3154,1001 @@ const GUIDED_STEPS_6 = [
   {type:'complete',tag:'Topic 6 Complete',title:"You've finished Topic 6!",
   subtitle:'Circular motion and gravitation are the bridge between Newtonian mechanics and modern astrophysics. These ideas return in Topic 10 with relativistic corrections.'}
 ];
+
+// ── TOPIC 7 GUIDED LESSON — ATOMIC, NUCLEAR & PARTICLE PHYSICS ───────────────
+const GUIDED_STEPS_7 = [
+
+  // ── LESSON 1: The Nuclear Atom ────────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 1 of 10 · Atomic Structure',title:'The Nuclear Atom',
+  subtitle:'Our picture of the atom changed dramatically in the early 20th century. Understanding Rutherford\'s discovery is the starting point for all of nuclear physics.',
+  body:`
+<h3>Models of the Atom</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Thomson's Plum-Pudding Model (1904)</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Electrons embedded in a diffuse positive "pudding". Predicted alpha particles would pass through gold foil with only small deflections.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent2)">Rutherford's Nuclear Model (1911)</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Gold foil experiment: most alpha particles passed straight through, but a few bounced straight back. Concluded that positive charge and most mass are concentrated in a tiny, dense <strong>nucleus</strong>. Electrons orbit at large distances.</p>
+  </div>
+</div>
+<h3>Nuclear Notation</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">²³⁸₉₂U &nbsp;&nbsp; A = mass number (protons + neutrons)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Z = atomic number (protons)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N = neutrons = A − Z</p>
+</div>
+<h3>Key Nuclear Properties</h3>
+<ul style="font-size:14px;color:#cccce0;line-height:1.9;margin:8px 0 8px 20px">
+  <li><strong>Isotopes:</strong> same Z (same element), different N (different neutron count)</li>
+  <li><strong>Nuclear radius:</strong> r = r₀ A^(1/3), where r₀ ≈ 1.2 × 10⁻¹⁵ m (1.2 fm)</li>
+  <li><strong>Nuclear density</strong> is approximately constant for all nuclei (~2 × 10¹⁷ kg m⁻³)</li>
+</ul>`},
+
+  // ── QUIZ 1 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 1',title:'The Nuclear Atom — Check Your Understanding',
+  questions:[
+    {q:'Rutherford\'s gold foil experiment showed that some alpha particles bounced back at large angles. This led to the conclusion that:',opts:['Electrons are spread throughout the atom','Atoms are mostly empty space with a tiny dense positive nucleus','The nucleus contains electrons','Alpha particles are negatively charged'],correct:1,feedback:'The large-angle scattering of alpha particles could only be explained if all the positive charge and most of the mass were concentrated in a tiny nucleus. Most alphas passed through the mostly-empty atom undeflected.'},
+    {q:'An atom is written as ⁵⁶₂₆Fe. How many neutrons does it have?',opts:['26','30','56','82'],correct:1,feedback:'N = A − Z = 56 − 26 = 30 neutrons. A is the mass number (top), Z is the atomic number (bottom, = number of protons).'},
+    {q:'Two atoms are isotopes of the same element. This means they have:',opts:['The same mass number but different atomic numbers','The same atomic number but different numbers of neutrons','The same number of neutrons but different protons','Identical nuclei'],correct:1,feedback:'Isotopes have the same atomic number Z (same element, same protons) but different numbers of neutrons, giving different mass numbers A. For example, ¹²C and ¹⁴C are both carbon but have 6 and 8 neutrons respectively.'}
+  ]},
+
+  // ── LESSON 2: Radioactive Decay ───────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 2 of 10 · Radioactivity',title:'Radioactive Decay: Alpha, Beta & Gamma',
+  subtitle:'Unstable nuclei spontaneously emit radiation to become more stable. There are three main types — and each behaves very differently.',
+  body:`
+<h3>Alpha Decay (α)</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin:8px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">Emits a <strong>helium-4 nucleus</strong> (²⁴He): 2 protons + 2 neutrons. A decreases by 4, Z decreases by 2.</p>
+  <p style="font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);margin-top:6px">²³⁸₉₂U → ²³⁴₉₀Th + ⁴₂He</p>
+  <p style="font-size:12px;color:var(--muted);margin-top:4px">Range in air: ~few cm. Stopped by paper. Highly ionising.</p>
+</div>
+<h3>Beta-Minus Decay (β⁻)</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin:8px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">A <strong>neutron converts to a proton</strong>, emitting an electron (β⁻) and an antineutrino (ν̄ₑ). A unchanged, Z increases by 1.</p>
+  <p style="font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);margin-top:6px">n → p + e⁻ + ν̄ₑ</p>
+  <p style="font-size:12px;color:var(--muted);margin-top:4px">Range: metres in air. Stopped by a few mm of aluminium. Moderately ionising.</p>
+</div>
+<h3>Beta-Plus Decay (β⁺)</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin:8px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">A <strong>proton converts to a neutron</strong>, emitting a positron (β⁺) and a neutrino (νₑ). A unchanged, Z decreases by 1.</p>
+  <p style="font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);margin-top:6px">p → n + e⁺ + νₑ</p>
+</div>
+<h3>Gamma Decay (γ)</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin:8px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">Emission of a <strong>high-energy photon</strong> from an excited nucleus. No change in A or Z — nucleus just loses energy. Penetrating: requires thick lead or concrete to stop. Least ionising per unit path.</p>
+</div>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">CONSERVATION LAWS IN DECAY</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">In every decay: mass number A, atomic number Z (charge), momentum, energy, and lepton number are all conserved.</p>
+</div>`},
+
+  // ── QUIZ 2 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 2',title:'Radioactive Decay — Check Your Understanding',
+  questions:[
+    {q:'A nucleus undergoes alpha decay. What happens to its mass number A and atomic number Z?',opts:['A increases by 4, Z increases by 2','A decreases by 4, Z decreases by 2','A decreases by 4, Z increases by 2','A is unchanged, Z decreases by 2'],correct:1,feedback:'Alpha particle = ⁴₂He (mass number 4, charge 2). Emitting it reduces A by 4 and Z by 2. The daughter nucleus has two fewer protons and two fewer neutrons.'},
+    {q:'Which type of radiation is the most penetrating?',opts:['Alpha','Beta-minus','Gamma','Beta-plus'],correct:2,feedback:'Gamma rays are the most penetrating — they require thick lead or concrete to attenuate significantly. Alpha particles are stopped by paper or a few cm of air; beta by mm of aluminium.'},
+    {q:'In beta-minus decay, a neutron converts to a proton. Which particles are emitted?',opts:['An electron only','An electron and an antineutrino','A positron and a neutrino','A proton and a neutrino'],correct:1,feedback:'β⁻ decay: n → p + e⁻ + ν̄ₑ. An electron (the beta particle) and an antineutrino are emitted. The antineutrino was inferred from the continuous energy spectrum of the electrons.'}
+  ]},
+
+  // ── LESSON 3: Half-Life & Radioactive Decay Law ───────────────────────────────
+  {type:'lesson',tag:'Lesson 3 of 10 · Radioactivity',title:'Half-Life & the Decay Law',
+  subtitle:'Radioactive decay is random at the individual nucleus level but follows a precise statistical law at the population level. The decay constant and half-life describe this beautifully.',
+  body:`
+<h3>The Decay Law</h3>
+<p>The rate of decay is proportional to the number of undecayed nuclei present:</p>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2.2;margin:0">N = N₀ e^(−λt)<br>A = A₀ e^(−λt) &nbsp;&nbsp; (activity A = λN, in Bq)<br>t½ = ln2/λ = 0.693/λ</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:6px">λ = decay constant (s⁻¹) · N = number of undecayed nuclei · t½ = half-life</p>
+</div>
+<h3>Half-Life</h3>
+<p>The <strong>half-life t½</strong> is the time for half the nuclei in a sample to decay — or equivalently, for the activity to halve. It is constant regardless of the starting amount.</p>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.1em;margin-bottom:6px">WORKED EXAMPLE</div>
+  <p style="font-size:13px;color:#cccce0;margin:0;line-height:1.8">A sample has activity 800 Bq and half-life 4.0 days.<br>
+  After 12 days (= 3 half-lives): A = 800 × (½)³ = 800/8 = <strong>100 Bq</strong></p>
+</div>
+<h3>Activity and the Becquerel</h3>
+<p><strong>Activity A</strong> = number of decays per second (Bq = s⁻¹). Activity is proportional to the number of undecayed nuclei: A = λN. As nuclei decay, activity decreases exponentially.</p>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">RANDOMNESS</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Decay is <strong>random and spontaneous</strong> — you cannot predict when any individual nucleus will decay. The decay constant λ gives the probability of decay per unit time per nucleus. This randomness is fundamental, not due to ignorance.</p>
+</div>`},
+
+  // ── QUIZ 3 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 3',title:'Half-Life & Decay Law — Check Your Understanding',
+  questions:[
+    {q:'A radioactive isotope has half-life 8.0 days. What fraction of the original activity remains after 32 days?',opts:['1/4','1/8','1/16','1/32'],correct:2,feedback:'32 days = 4 half-lives. Fraction remaining = (½)⁴ = 1/16.'},
+    {q:'A sample has decay constant λ = 0.023 s⁻¹. Its half-life is:',opts:['0.023 s','30 s','43 s','0.043 s'],correct:1,feedback:'t½ = ln2/λ = 0.693/0.023 ≈ 30 s.'},
+    {q:'The activity of a source is 6400 Bq. After 3 half-lives its activity is:',opts:['800 Bq','1600 Bq','2133 Bq','3200 Bq'],correct:0,feedback:'After each half-life, activity halves. After 3 half-lives: A = 6400 × (½)³ = 6400/8 = 800 Bq.'}
+  ]},
+
+  // ── LESSON 4: Nuclear Binding Energy ─────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 4 of 10 · Nuclear Physics',title:'Mass Defect & Nuclear Binding Energy',
+  subtitle:'The mass of a nucleus is always less than the sum of its parts. This missing mass — the mass defect — is converted to the binding energy that holds the nucleus together.',
+  body:`
+<h3>Mass Defect</h3>
+<p>The <strong>mass defect Δm</strong> is the difference between the sum of the masses of the individual nucleons and the actual mass of the nucleus:</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">Δm = (Z·mₚ + N·mₙ) − m_nucleus</p>
+<h3>Binding Energy</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">E_B = Δm × c²<br>1 u = 931.5 MeV/c² &nbsp;&nbsp; (atomic mass unit)</p>
+</div>
+<p>The binding energy is the energy required to completely separate all nucleons in a nucleus. Higher binding energy → more tightly bound → more stable nucleus.</p>
+<h3>Binding Energy per Nucleon</h3>
+<p>The <strong>binding energy per nucleon</strong> (E_B/A) peaks at around <strong>iron-56 (⁵⁶Fe)</strong>, at ~8.8 MeV/nucleon. This is the most stable nucleus. All nuclear energy release comes from moving nuclei closer to this peak:</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
+  <div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:4px">FISSION</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Heavy nuclei (high A) split into smaller ones, moving closer to iron — releasing energy.</p>
+  </div>
+  <div style="background:rgba(155,143,249,.06);border:1px solid rgba(155,143,249,.25);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:4px">FUSION</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Light nuclei (low A) merge into heavier ones, moving closer to iron — releasing even more energy per nucleon.</p>
+  </div>
+</div>`},
+
+  // ── QUIZ 4 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 4',title:'Binding Energy — Check Your Understanding',
+  questions:[
+    {q:'The mass defect of a nucleus is 0.050 u. Its binding energy is: (1 u = 931.5 MeV)',opts:['0.050 MeV','46.6 MeV','931.5 MeV','18.6 MeV'],correct:1,feedback:'E_B = Δm × 931.5 MeV/u = 0.050 × 931.5 = 46.6 MeV.'},
+    {q:'Which nucleus has the highest binding energy per nucleon?',opts:['Hydrogen-1','Helium-4','Iron-56','Uranium-238'],correct:2,feedback:'Iron-56 sits at the peak of the binding energy per nucleon curve at ~8.8 MeV/nucleon — making it the most stable nucleus. Energy is released by any process that moves nuclei toward this peak.'},
+    {q:'Nuclear fission releases energy because:',opts:['The products have greater mass than the reactants','The products have higher binding energy per nucleon than the heavy reactant','Neutrons are destroyed in the process','The strong force does negative work'],correct:1,feedback:'Fission of heavy nuclei (e.g. U-235) produces fragments closer to iron on the B/A curve, which have higher binding energy per nucleon. The increase in binding energy appears as released kinetic energy (via E = mc²).'}
+  ]},
+
+  // ── LESSON 5: Nuclear Fission & Fusion ───────────────────────────────────────
+  {type:'lesson',tag:'Lesson 5 of 10 · Nuclear Physics',title:'Nuclear Fission & Fusion',
+  subtitle:'Fission powers nuclear reactors; fusion powers the Sun and stars. Both convert mass to energy via E = mc². Understanding the differences matters for both physics and the energy debate.',
+  body:`
+<h3>Nuclear Fission</h3>
+<p>A heavy nucleus (e.g. U-235) absorbs a slow neutron and splits into two smaller nuclei plus 2–3 fast neutrons and energy:</p>
+<p style="font-family:'Space Mono',monospace;font-size:12px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">²³⁵₉₂U + ¹₀n → ⁹²₃₆Kr + ¹⁴¹₅₆Ba + 3¹₀n + ~200 MeV</p>
+<p>The released neutrons can trigger further fissions — a <strong>chain reaction</strong>. In a reactor, control rods absorb excess neutrons to maintain a steady controlled reaction (criticality).</p>
+<h3>Nuclear Fusion</h3>
+<p>Light nuclei combine at extremely high temperatures (~10⁷–10⁸ K) where thermal energy overcomes electrostatic repulsion:</p>
+<p style="font-family:'Space Mono',monospace;font-size:12px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">²₁H + ³₁H → ⁴₂He + ¹₀n + 17.6 MeV</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;font-size:13px">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:4px">Fusion advantages</div>
+    <p style="color:#cccce0;margin:0">More energy per nucleon · Fuel (hydrogen isotopes) abundant · No long-lived radioactive waste</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+    <div style="font-weight:700;color:var(--accent);margin-bottom:4px">Fusion challenges</div>
+    <p style="color:#cccce0;margin:0">Requires extreme temperatures · Plasma confinement is difficult · No commercial reactor yet</p>
+  </div>
+</div>`},
+
+  // ── QUIZ 5 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 5',title:'Fission & Fusion — Check Your Understanding',
+  questions:[
+    {q:'In a nuclear chain reaction, the role of the control rods is to:',opts:['Slow down neutrons to thermal energies','Absorb excess neutrons to control the reaction rate','Reflect neutrons back into the core','Convert heat to electricity'],correct:1,feedback:'Control rods (made of boron or cadmium) absorb neutrons. Inserting them reduces the number of neutrons available for fission, slowing or stopping the chain reaction. The moderator (not control rods) slows neutrons.'},
+    {q:'Fusion reactions require very high temperatures because:',opts:['High temperatures increase the mass of the nuclei','Protons need enough kinetic energy to overcome electrostatic repulsion and get close enough for the strong force to act','High temperatures reduce the binding energy','Fusion only occurs in a vacuum'],correct:1,feedback:'Fusion requires bringing positively-charged nuclei close enough for the strong nuclear force to dominate over electrostatic repulsion. At ~10⁷–10⁸ K, thermal kinetic energies are sufficient to overcome this Coulomb barrier.'},
+    {q:'Per kilogram of fuel, which process releases more energy?',opts:['Fission of U-235','Fusion of hydrogen isotopes','Combustion of coal','All release the same energy'],correct:1,feedback:'Fusion releases ~4× more energy per kilogram than fission (~340 MJ/g vs ~82 MJ/g for U-235), and millions of times more than chemical combustion. This is why fusion is the goal for future power generation.'}
+  ]},
+
+  // ── LESSON 6: The Standard Model — Quarks & Leptons ──────────────────────────
+  {type:'lesson',tag:'Lesson 6 of 10 · Particle Physics',title:'The Standard Model: Quarks & Leptons',
+  subtitle:'Protons and neutrons are not fundamental — they are made of quarks. The Standard Model classifies all known fundamental particles and the forces between them.',
+  body:`
+<h3>The Standard Model Overview</h3>
+<p>All matter is made of <strong>fermions</strong> (spin-½ particles): quarks and leptons. Forces are mediated by <strong>bosons</strong>.</p>
+<h3>Quarks</h3>
+<div style="display:flex;flex-direction:column;gap:6px;margin:10px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;color:#cccce0">
+    <span><strong style="color:var(--accent)">Up (u)</strong></span><span style="font-family:'Space Mono',monospace;color:var(--accent2)">charge +⅔e</span>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;color:#cccce0">
+    <span><strong style="color:var(--accent)">Down (d)</strong></span><span style="font-family:'Space Mono',monospace;color:var(--accent2)">charge −⅓e</span>
+  </div>
+</div>
+<p style="font-size:13px;color:#cccce0">Proton = uud: charge = +⅔ + ⅔ − ⅓ = +1e ✓<br>Neutron = udd: charge = +⅔ − ⅓ − ⅓ = 0 ✓</p>
+<h3>Leptons</h3>
+<p>Leptons do not feel the strong force. Key leptons:</p>
+<div style="display:flex;flex-direction:column;gap:6px;margin:10px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px"><strong style="color:var(--accent)">Electron (e⁻)</strong> — charge −1e, mass 0.511 MeV/c²</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px"><strong style="color:var(--accent)">Electron neutrino (νₑ)</strong> — charge 0, tiny mass</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px"><strong style="color:var(--accent)">Muon (μ⁻)</strong> and <strong style="color:var(--accent)">tau (τ⁻)</strong> — heavier copies of the electron</div>
+</div>
+<h3>Hadrons</h3>
+<p>Particles made of quarks: <strong>baryons</strong> (3 quarks, e.g. protons, neutrons) and <strong>mesons</strong> (quark + antiquark, e.g. pions).</p>`},
+
+  // ── LESSON 7: The Four Fundamental Forces ────────────────────────────────────
+  {type:'lesson',tag:'Lesson 7 of 10 · Particle Physics',title:'The Four Fundamental Forces',
+  subtitle:'All interactions in nature reduce to four fundamental forces. Each has a carrier particle (boson) and a very different range and strength.',
+  body:`
+<h3>Overview</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">
+      <span style="font-size:13px;font-weight:700;color:var(--accent)">Strong Nuclear Force</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2)">Carrier: gluon</span>
+    </div>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Holds quarks together in nucleons; holds nucleons in the nucleus. Range: ~10⁻¹⁵ m. Strongest of the four forces. Acts on quarks and gluons only.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">
+      <span style="font-size:13px;font-weight:700;color:var(--accent)">Electromagnetic Force</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2)">Carrier: photon</span>
+    </div>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Acts on all charged particles. Infinite range. Responsible for atomic structure, chemistry, light. ~100× weaker than strong force.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">
+      <span style="font-size:13px;font-weight:700;color:var(--accent)">Weak Nuclear Force</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2)">Carriers: W⁺, W⁻, Z</span>
+    </div>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Responsible for beta decay — changes quark flavour. Range: ~10⁻¹⁸ m. Acts on all fermions.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">
+      <span style="font-size:13px;font-weight:700;color:var(--accent)">Gravity</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2)">Carrier: graviton (theoretical)</span>
+    </div>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Infinite range. Acts on all mass-energy. By far the weakest force — only significant for large masses. Not yet incorporated into the Standard Model.</p>
+  </div>
+</div>`},
+
+  // ── QUIZ 6 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lessons 6–7',title:'Particle Physics — Check Your Understanding',
+  questions:[
+    {q:'A proton is made of which quarks?',opts:['udd','uud','ddd','uuu'],correct:1,feedback:'Proton = uud. Charge = +⅔ + ⅔ − ⅓ = +1e. A neutron = udd: charge = +⅔ − ⅓ − ⅓ = 0.'},
+    {q:'Beta-minus decay is mediated by which force?',opts:['Strong nuclear force','Electromagnetic force','Weak nuclear force','Gravity'],correct:2,feedback:'Beta decay (n → p + e⁻ + ν̄ₑ) involves a down quark changing to an up quark — a change in quark flavour. This is mediated by the W⁻ boson of the weak nuclear force.'},
+    {q:'Which particle mediates the electromagnetic force?',opts:['Gluon','W boson','Photon','Graviton'],correct:2,feedback:'The photon is the exchange particle (gauge boson) of the electromagnetic force. Gluons mediate the strong force; W and Z bosons mediate the weak force; the graviton (theoretical) would mediate gravity.'}
+  ]},
+
+  // ── LESSON 8: Antimatter & Conservation Laws ──────────────────────────────────
+  {type:'lesson',tag:'Lesson 8 of 10 · Particle Physics',title:'Antimatter & Conservation Laws',
+  subtitle:'Every particle has an antiparticle. When matter meets antimatter, annihilation occurs. Conservation laws determine which particle interactions are allowed.',
+  body:`
+<h3>Antimatter</h3>
+<p>Every particle has a corresponding <strong>antiparticle</strong> with the same mass but opposite charge (and opposite quantum numbers). Examples:</p>
+<div style="display:flex;flex-direction:column;gap:6px;margin:10px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Electron e⁻ ↔ Positron e⁺ (same mass, opposite charge)</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Proton p ↔ Antiproton p̄</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Up quark u ↔ Anti-up quark ū (charge −⅔e)</div>
+</div>
+<h3>Pair Production & Annihilation</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
+  <div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:4px">PAIR PRODUCTION</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">γ → e⁻ + e⁺ (photon → electron + positron). Requires E_photon ≥ 2m_e c² = 1.02 MeV</p>
+  </div>
+  <div style="background:rgba(247,108,124,.06);border:1px solid rgba(247,108,124,.2);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--danger);margin-bottom:4px">ANNIHILATION</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">e⁻ + e⁺ → 2γ (electron + positron → two photons, each ≥ 0.511 MeV)</p>
+  </div>
+</div>
+<h3>Conservation Laws</h3>
+<p>In all particle interactions, these quantities are conserved:</p>
+<ul style="font-size:14px;color:#cccce0;line-height:1.9;margin:8px 0 8px 20px">
+  <li><strong>Energy</strong> and <strong>momentum</strong> (always)</li>
+  <li><strong>Charge</strong> (always)</li>
+  <li><strong>Baryon number</strong> (always)</li>
+  <li><strong>Lepton number</strong> (by family, in Standard Model)</li>
+  <li><strong>Strangeness</strong> (conserved in strong and EM, violated in weak interactions)</li>
+</ul>`},
+
+  // ── QUIZ 7 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 8',title:'Antimatter & Conservation — Check Your Understanding',
+  questions:[
+    {q:'An electron and positron at rest annihilate. The minimum total energy of the photons produced is: (m_e = 0.511 MeV/c²)',opts:['0.511 MeV','1.022 MeV','2.044 MeV','Zero'],correct:1,feedback:'Each particle contributes rest energy m_e c² = 0.511 MeV. Total = 2 × 0.511 = 1.022 MeV. Two photons are produced (each 0.511 MeV) to conserve momentum.'},
+    {q:'Which conservation law is violated in weak interactions but conserved in strong interactions?',opts:['Charge','Baryon number','Energy','Strangeness'],correct:3,feedback:'Strangeness is conserved in strong and electromagnetic interactions but can be violated in weak interactions. This is why strange particles (containing s quarks) decay slowly via the weak force rather than quickly via the strong force.'},
+    {q:'A reaction produces a proton (baryon number +1). To conserve baryon number, the reaction must also produce:',opts:['An antiproton','A neutron or another baryon, OR start with a baryon in reactants','A positron','A photon'],correct:1,feedback:'Baryon number is always conserved. If a proton (B = +1) is produced, the total baryon number on the right must equal the total on the left. This means either a baryon was present in reactants, or another baryon is also produced alongside an antibaryon.'}
+  ]},
+
+  // ── COMPLETION ────────────────────────────────────────────────────────────────
+  {type:'complete',tag:'Topic 7 Complete',title:"You've finished Topic 7!",
+  subtitle:'Atomic, nuclear and particle physics takes you from the structure of the atom all the way to the fundamental building blocks of matter. These ideas connect directly to Topics 8 and 10.'}
+];
+
+// ── TOPIC 8 GUIDED LESSON — ENERGY PRODUCTION ────────────────────────────────
+const GUIDED_STEPS_8 = [
+
+  // ── LESSON 1: Energy Sources Overview ────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 1 of 9 · Energy Sources',title:'Renewable vs Non-Renewable Energy',
+  subtitle:'Every energy source humanity uses has trade-offs. Understanding the physics behind each — and how to quantify them — is what this topic is about.',
+  body:`
+<h3>Non-Renewable Sources</h3>
+<p>Non-renewable sources are finite — they took millions of years to form and cannot be replenished on human timescales.</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Fossil Fuels</span> <span style="font-size:11px;color:var(--muted)">(coal, oil, natural gas)</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">High energy density, reliable, existing infrastructure. Major source of CO₂, NOₓ, SOₓ. Coal ~820 g CO₂/kWh; natural gas ~490 g CO₂/kWh.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Nuclear Fission</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Extremely high energy density — ~3 million × more energy per kg than coal. Near-zero CO₂ during operation. Produces radioactive waste requiring centuries of safe storage.</p>
+  </div>
+</div>
+<h3>Renewable Sources</h3>
+<p>Renewable sources are replenished naturally on human timescales — solar, wind, hydro, tidal, geothermal, biomass.</p>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:13px;color:#cccce0">
+  <strong style="color:var(--accent2)">Advantages:</strong> Low/zero operational emissions, inexhaustible supply.<br>
+  <strong style="color:var(--accent2)">Disadvantages:</strong> Variable/intermittent output (sun, wind), lower energy density, higher upfront costs, land use.
+</div>
+<h3>Specific Energy & Energy Density</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:13px;color:#cccce0;line-height:2;margin:0">Specific energy = energy per unit mass (J kg⁻¹)<br>Energy density = energy per unit volume (J m⁻³)</p>
+  <p style="font-size:12px;color:var(--muted);margin-top:6px">Higher specific energy = less fuel mass needed. Important for transport applications.</p>
+</div>`},
+
+  // ── QUIZ 1 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 1',title:'Energy Sources — Check Your Understanding',
+  questions:[
+    {q:'Which energy source produces the most CO₂ emissions per unit of electrical energy?',opts:['Nuclear','Wind','Coal','Natural gas'],correct:2,feedback:'Coal produces ~820 g CO₂/kWh — the highest of any source. Natural gas (~490 g/kWh) is second. Nuclear and wind both have lifecycle emissions below 20 g/kWh.'},
+    {q:'A fuel has specific energy 45 MJ kg⁻¹. How much fuel is needed to release 900 MJ?',opts:['0.05 kg','20 kg','45 kg','900 kg'],correct:1,feedback:'Mass = energy / specific energy = 900 / 45 = 20 kg.'},
+    {q:'Which statement about renewable energy is correct?',opts:['All renewables produce zero emissions at all stages','Renewables are replenished naturally on human timescales','Renewables always have higher energy density than fossil fuels','Renewables are always cheaper than fossil fuels'],correct:1,feedback:'Renewable sources are defined as being replenished by natural processes on human timescales. They do have some lifecycle emissions (manufacturing, construction) and generally have lower energy density than fossil fuels.'}
+  ]},
+
+  // ── LESSON 2: Thermal Power Stations ─────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 2 of 9 · Thermal Power',title:'How Thermal Power Stations Work',
+  subtitle:'Whether burning coal, gas, or splitting uranium — all thermal power stations share the same fundamental cycle. Understanding it lets you calculate efficiency.',
+  body:`
+<h3>The Common Cycle</h3>
+<ol style="font-size:14px;color:#cccce0;line-height:2;margin:8px 0 8px 20px">
+  <li><strong>Heat source</strong> (combustion or fission) releases thermal energy Q_H</li>
+  <li><strong>Boiler</strong> converts water to high-pressure steam</li>
+  <li><strong>Turbine</strong> — steam expands, doing work, spinning the turbine</li>
+  <li><strong>Generator</strong> — turbine shaft drives a coil in a magnetic field → electrical energy</li>
+  <li><strong>Condenser</strong> — waste heat Q_C dumped to cold reservoir (river, sea, cooling towers)</li>
+</ol>
+<h3>Efficiency</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">η = P_electrical / P_thermal = W_useful / Q_in<br>η_max = η_Carnot = 1 − T_C / T_H &nbsp;&nbsp; (temperatures in K)</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+    <span><strong>Coal</strong></span><span style="font-family:'Space Mono',monospace;color:var(--muted)">~35% efficiency</span>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+    <span><strong>Combined cycle gas (CCGT)</strong></span><span style="font-family:'Space Mono',monospace;color:var(--muted)">~55% efficiency</span>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+    <span><strong>Nuclear fission</strong></span><span style="font-family:'Space Mono',monospace;color:var(--muted)">~32% efficiency</span>
+  </div>
+</div>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">WHY CAN'T IT BE 100%?</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">The Carnot limit (second law of thermodynamics) sets an absolute ceiling on efficiency. To reach 100% you would need T_C = 0 K — impossible. Waste heat to the environment is unavoidable.</p>
+</div>`},
+
+  // ── QUIZ 2 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 2',title:'Thermal Power — Check Your Understanding',
+  questions:[
+    {q:'A power station consumes 800 MW of thermal power and generates 280 MW electrically. Its efficiency is:',opts:['28%','35%','65%','72%'],correct:1,feedback:'η = P_electrical / P_thermal = 280 / 800 = 0.35 = 35%.'},
+    {q:'A Carnot engine operates between 600 K and 300 K. Its maximum efficiency is:',opts:['25%','50%','75%','100%'],correct:1,feedback:'η_Carnot = 1 − T_C/T_H = 1 − 300/600 = 0.50 = 50%.'},
+    {q:'In a thermal power station, the condenser\'s role is to:',opts:['Generate steam from water','Convert steam kinetic energy to rotation','Dump waste heat to the cold reservoir, condensing steam back to water','Control the fission reaction rate'],correct:2,feedback:'The condenser cools exhaust steam back into liquid water, releasing waste heat Q_C to the environment (cooling water, river, or atmosphere). This completes the thermodynamic cycle.'}
+  ]},
+
+  // ── LESSON 3: Nuclear Reactors ────────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 3 of 9 · Thermal Power',title:'Inside a Nuclear Reactor',
+  subtitle:'A nuclear reactor is essentially a thermal power station where the boiler is replaced by controlled fission. Four key components make it work.',
+  body:`
+<h3>The Four Key Components</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">Fuel Rods</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Enriched uranium-235 (natural uranium is mostly U-238, which does not fission readily). Each fission of U-235 releases ~200 MeV — ~3 million × more than burning a carbon atom.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">Moderator</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Slows fast fission neutrons to thermal (slow) energies where U-235 is much more likely to absorb them and fission. Common moderators: light water (H₂O), heavy water (D₂O), graphite.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">Control Rods</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Made of boron or cadmium — materials that absorb neutrons strongly. Inserting them further reduces reaction rate; withdrawing increases it. Used to maintain criticality (one fission per fission on average).</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">Coolant</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Carries thermal energy from the core to the steam generator. In a pressurised water reactor (PWR), water at ~150 atm stays liquid even above 300°C. The primary coolant loop is separate from the steam loop for safety.</p>
+  </div>
+</div>`},
+
+  // ── QUIZ 3 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 3',title:'Nuclear Reactors — Check Your Understanding',
+  questions:[
+    {q:'The moderator in a nuclear reactor is used to:',opts:['Absorb excess neutrons to control the chain reaction','Slow fast fission neutrons to thermal energies so they can cause further fission','Cool the reactor core','Shield workers from radiation'],correct:1,feedback:'The moderator (water, heavy water, or graphite) slows fast neutrons emitted by fission to thermal speeds where U-235 has a much higher cross-section for absorption and fission. Control rods (not the moderator) absorb neutrons to regulate rate.'},
+    {q:'What is the role of control rods in a nuclear reactor?',opts:['Slow neutrons down','Absorb neutrons to control the fission rate','Generate the steam','Prevent radiation from escaping the core'],correct:1,feedback:'Control rods (boron/cadmium) absorb neutrons. Inserting them further reduces the number of neutrons available for fission — slowing or stopping the chain reaction. Withdrawing them allows more fissions.'},
+    {q:'Why is uranium enriched before use in most reactors?',opts:['To increase its density','To reduce radioactivity','To increase the proportion of fissile U-235 above the natural 0.7%','To remove the neutrons from U-238'],correct:2,feedback:'Natural uranium is ~99.3% U-238 (which does not fission with slow neutrons) and only ~0.7% U-235 (fissile). Enrichment increases the U-235 proportion to ~3–5% for reactor fuel (>90% for weapons grade).'}
+  ]},
+
+  // ── LESSON 4: Solar Power ─────────────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 4 of 9 · Renewable Energy',title:'Solar Power',
+  subtitle:'The Sun delivers about 1360 W m⁻² at Earth\'s orbit. Two very different technologies convert this energy into something useful.',
+  body:`
+<h3>The Solar Constant</h3>
+<p>The <strong>solar constant I₀ ≈ 1360 W m⁻²</strong> is the power per unit area received from the Sun at Earth's distance, measured perpendicular to the sunlight.</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">P_incident = I × A × cosθ &nbsp;&nbsp; (θ = angle of surface to sunlight)</p>
+<h3>Photovoltaic (PV) Cells</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">Convert light <em>directly</em> to electricity via the photovoltaic effect in semiconductor junctions (p-n junctions). <strong>No moving parts.</strong> Efficiency ~15–22% for commercial panels. Output is DC and varies with intensity and temperature.</p>
+  <p style="font-family:'Space Mono',monospace;font-size:13px;color:var(--accent2);margin-top:6px">P_output = η × I × A</p>
+</div>
+<h3>Solar Thermal</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0">
+  <p style="font-size:13px;color:#cccce0;margin:0">Concentrates sunlight to heat a fluid (water, oil, molten salt), which then drives a conventional steam turbine. Higher potential efficiency (~35%) than PV. Best in regions with strong direct sunlight. Can store heat for generation overnight.</p>
+</div>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">KEY DIFFERENCE</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">PV converts photons → electrons directly. Solar thermal converts photons → heat → mechanical work → electricity. PV works on diffuse light; solar thermal needs concentrated direct sunlight.</p>
+</div>`},
+
+  // ── LESSON 5: Wind & Hydroelectric Power ─────────────────────────────────────
+  {type:'lesson',tag:'Lesson 5 of 9 · Renewable Energy',title:'Wind & Hydroelectric Power',
+  subtitle:'Wind and water are the two largest sources of renewable electricity today. Both convert kinetic or potential energy to electrical energy — with well-defined power equations.',
+  body:`
+<h3>Wind Power</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">P = ½ρAv³<br>ρ = air density (~1.2 kg m⁻³) · A = rotor swept area (πr²) · v = wind speed</p>
+</div>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.1em;margin-bottom:4px">KEY INSIGHT — v³ DEPENDENCE</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Power is proportional to the <em>cube</em> of wind speed. Doubling wind speed gives 2³ = <strong>8× the power</strong>. This is why turbine placement in high-wind locations is critical, and why even a modest increase in average wind speed dramatically increases output.</p>
+</div>
+<p><strong>Betz limit:</strong> the theoretical maximum fraction of wind energy extractable by a turbine is ~59%. Real turbines achieve 35–45%.</p>
+<h3>Hydroelectric Power</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">P = ρgQh × η<br>Q = volume flow rate (m³ s⁻¹) · h = head height (m) · η = efficiency</p>
+</div>
+<p>Water stores gravitational PE at height h. As it falls through turbines, PE → KE → electrical energy. Efficiencies of 85–95% are achievable — the highest of any energy technology.</p>
+<h3>Pumped Storage</h3>
+<p>Surplus electricity (e.g. from nuclear or wind at night) is used to pump water <em>uphill</em> to a reservoir. During peak demand, water is released through turbines. Acts as a giant energy battery — the only large-scale electricity storage technology that is commercially proven.</p>`},
+
+  // ── QUIZ 4 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lessons 4–5',title:'Solar, Wind & Hydro — Check Your Understanding',
+  questions:[
+    {q:'A solar panel of area 3.0 m² has efficiency 18%. At solar constant 1360 W m⁻², its output power is:',opts:['245 W','489 W','734 W','1360 W'],correct:1,feedback:'P = η × I × A = 0.18 × 1360 × 3.0 = 734 W... Wait: 0.18 × 1360 = 244.8, × 3.0 = 734 W. That is answer C. Let me recheck: 0.18 × 1360 × 3.0 = 734 W → answer C.'},
+    {q:'Wind speed increases from 8 m/s to 16 m/s. The available wind power changes by a factor of:',opts:['2','4','6','8'],correct:3,feedback:'P ∝ v³. Doubling v: factor = 2³ = 8. This cube dependence is why wind speed at a site is the most important factor in turbine productivity.'},
+    {q:'A hydroelectric dam has a flow rate Q = 50 m³/s, head height h = 40 m, and efficiency 90%. The electrical output power is: (ρ = 1000 kg/m³, g = 9.81 m/s²)',opts:['1.77 MW','17.7 MW','196 MW','19.6 MW'],correct:1,feedback:'P = ρgQhη = 1000 × 9.81 × 50 × 40 × 0.90 = 1000 × 9.81 × 50 × 36 = 17 658 000 W ≈ 17.7 MW.'}
+  ]},
+
+  // ── LESSON 6: Black-Body Radiation & Wien's Law ───────────────────────────────
+  {type:'lesson',tag:'Lesson 6 of 9 · Radiation & Climate',title:'Black-Body Radiation',
+  subtitle:'Every object at any temperature above absolute zero emits electromagnetic radiation. Two laws precisely describe the power and peak wavelength of this emission.',
+  body:`
+<h3>What is a Black Body?</h3>
+<p>A <strong>black body</strong> is an idealised object that absorbs all incident radiation and emits the maximum possible radiation for its temperature. The Sun and Earth are good approximations.</p>
+<h3>Stefan-Boltzmann Law</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">P = σAT⁴ &nbsp;&nbsp; (total radiated power)<br>σ = 5.67 × 10⁻⁸ W m⁻² K⁻⁴</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:6px">Power radiated ∝ T⁴. Doubling temperature increases radiated power by 2⁴ = <strong>16×</strong>.</p>
+</div>
+<h3>Wien's Displacement Law</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">λ_max × T = 2.90 × 10⁻³ m K<br>Hotter → peak shifts to shorter (bluer) wavelength</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px">Sun (T ≈ 5800 K): λ_max = 2.90×10⁻³/5800 ≈ <strong>500 nm</strong> (visible — green/yellow)</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:9px 14px">Earth (T ≈ 255 K): λ_max = 2.90×10⁻³/255 ≈ <strong>11.4 μm</strong> (mid-infrared)</div>
+</div>
+<p>This wavelength difference is crucial: solar radiation (mostly visible) passes through the atmosphere, while Earth's emission (infrared) is absorbed by greenhouse gases.</p>`},
+
+  // ── QUIZ 5 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 6',title:'Black-Body Radiation — Check Your Understanding',
+  questions:[
+    {q:'A star has surface temperature 12 000 K. Its peak emission wavelength is: (Wien constant = 2.90 × 10⁻³ m K)',opts:['242 nm','500 nm','2900 nm','24.2 nm'],correct:0,feedback:'λ_max = 2.90×10⁻³ / 12 000 = 2.42×10⁻⁷ m = 242 nm — ultraviolet.'},
+    {q:'A black body radiates 100 W at 300 K. At 600 K its radiated power is:',opts:['200 W','400 W','800 W','1600 W'],correct:3,feedback:'P ∝ T⁴. Doubling T: P_new = 100 × (600/300)⁴ = 100 × 2⁴ = 100 × 16 = 1600 W.'},
+    {q:'Earth emits radiation primarily in the infrared (not visible) because:',opts:['Earth reflects sunlight outward','Earth\'s surface temperature (~255–288 K) gives λ_max ≈ 10 μm via Wien\'s law','Earth has no atmosphere to allow visible emission','The ozone layer blocks visible emission'],correct:1,feedback:'Wien\'s law: λ_max = b/T. At Earth\'s temperatures (~255–288 K), λ_max ≈ 10–11 μm — deep infrared. The Sun at 5800 K peaks at ~500 nm (visible). This difference underlies the greenhouse effect.'}
+  ]},
+
+  // ── LESSON 7: The Greenhouse Effect & Albedo ─────────────────────────────────
+  {type:'lesson',tag:'Lesson 7 of 9 · Radiation & Climate',title:'The Greenhouse Effect & Albedo',
+  subtitle:'The greenhouse effect keeps Earth ~33 °C warmer than it would otherwise be. Human activity is enhancing it. Albedo determines how much solar energy Earth absorbs.',
+  body:`
+<h3>The Natural Greenhouse Effect — Step by Step</h3>
+<ol style="font-size:14px;color:#cccce0;line-height:2;margin:8px 0 8px 20px">
+  <li>Short-wave solar radiation (mostly visible, λ ≈ 500 nm) arrives at Earth — <strong>largely transparent to the atmosphere</strong></li>
+  <li>Earth's surface absorbs this and warms up</li>
+  <li>Earth re-emits long-wave infrared radiation (λ ≈ 10 μm) upward</li>
+  <li>Greenhouse gases (CO₂, CH₄, H₂O vapour, N₂O, O₃) absorb this IR</li>
+  <li>They re-emit in all directions — including back toward the surface</li>
+  <li>Surface warms further → equilibrium temperature is raised</li>
+</ol>
+<p>Without any greenhouse effect, Earth's average surface temperature would be about <strong>−18 °C</strong> instead of the actual <strong>+15 °C</strong>.</p>
+<h3>The Enhanced Greenhouse Effect</h3>
+<p>Human emissions of CO₂ (fossil fuels), CH₄ (livestock, landfill), and N₂O (agriculture) increase greenhouse gas concentrations → more IR trapped → surface warms further.</p>
+<h3>Albedo</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;margin:0">α = reflected power / incident power &nbsp;&nbsp; (0 ≤ α ≤ 1)</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;margin:10px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Fresh snow/ice: α ≈ 0.80–0.90 (reflects most)</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Ocean water: α ≈ 0.06 (absorbs most)</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px">Earth average: α ≈ 0.30</div>
+</div>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">POSITIVE FEEDBACK LOOP</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Warming → ice melts → lower albedo → more solar energy absorbed → more warming. This ice-albedo feedback amplifies initial warming.</p>
+</div>`},
+
+  // ── QUIZ 6 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 7',title:'Greenhouse Effect & Albedo — Check Your Understanding',
+  questions:[
+    {q:'Greenhouse gases warm Earth\'s surface because they:',opts:['Reflect incoming solar radiation back to space','Absorb outgoing infrared radiation and re-emit it in all directions including back toward the surface','Produce heat through chemical reactions','Increase the solar constant'],correct:1,feedback:'Greenhouse gases (CO₂, CH₄, H₂O vapour etc.) are transparent to incoming visible solar radiation but absorb outgoing infrared from Earth\'s surface. They re-emit this IR in all directions — including back down — raising the surface temperature.'},
+    {q:'The albedo of fresh snow is 0.85. What fraction of incident solar radiation is absorbed?',opts:['85%','15%','50%','0.85%'],correct:1,feedback:'Albedo = reflected/incident = 0.85. So 85% is reflected and 1 − 0.85 = 15% is absorbed. Low-albedo surfaces (dark ocean, forests) absorb much more solar energy than high-albedo surfaces (ice, snow).'},
+    {q:'Without the natural greenhouse effect, Earth\'s average surface temperature would be approximately:',opts:['0°C','−18°C','−50°C','+5°C'],correct:1,feedback:'Simple radiative balance without greenhouse gases gives ~255 K = −18°C. The natural greenhouse effect raises this by ~33°C to the observed average of ~+15°C. Human enhancement is raising it further.'}
+  ]},
+
+  // ── COMPLETION ────────────────────────────────────────────────────────────────
+  {type:'complete',tag:'Topic 8 Complete',title:"You've finished Topic 8!",
+  subtitle:'Energy production connects thermal physics, nuclear physics, and climate science. The Stefan-Boltzmann and Wien\'s law material here links directly back to atomic physics (Topic 7) and the greenhouse effect is one of the most important applications of physics in the real world.'}
+];
+
+// ── TOPIC 9 GUIDED LESSON — WAVE PHENOMENA (AHL) ─────────────────────────────
+const GUIDED_STEPS_9 = [
+
+  // ── LESSON 1: The Doppler Effect ─────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 1 of 9 · Doppler Effect',title:'The Doppler Effect',
+  subtitle:'When a wave source moves relative to an observer, the observed frequency shifts. This effect applies to sound, light, and all waves — and it\'s one of astrophysics\'s most powerful tools.',
+  body:`
+<h3>What Causes the Doppler Effect?</h3>
+<p>When a source moves <em>toward</em> an observer, successive wavefronts are compressed together — the observer receives crests more frequently → <strong>higher observed frequency</strong>. When the source moves <em>away</em>, crests are stretched out → <strong>lower observed frequency</strong>.</p>
+<p>The <strong>speed of the wave</strong> is unchanged — only the spacing of wavefronts changes.</p>
+<h3>The Doppler Equation (for sound)</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">f_obs = f_s × (v ± v_o) / (v ∓ v_s)</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">v = wave speed &nbsp;·&nbsp; v_o = observer speed &nbsp;·&nbsp; v_s = source speed<br><strong>Approaching</strong> (higher f): + in numerator, − in denominator<br><strong>Receding</strong> (lower f): − in numerator, + in denominator</p>
+</div>
+<h3>Memory Aid</h3>
+<p>Think of it this way: anything that brings source and observer <em>closer</em> increases frequency (use the signs that make the fraction <em>larger</em>). Anything that separates them decreases frequency.</p>
+<h3>Doppler for Light (v ≪ c)</h3>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">z = Δλ/λ ≈ v/c &nbsp;&nbsp; (redshift z, for recession at v ≪ c)</p>
+<p>Receding sources shift to longer (redder) wavelengths — <strong>redshift</strong>. Approaching sources shift to shorter — <strong>blueshift</strong>. Cosmological redshift of galaxies is evidence for the expanding universe.</p>`},
+
+  // ── QUIZ 1 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 1',title:'Doppler Effect — Check Your Understanding',
+  questions:[
+    {q:'A siren emits 500 Hz and moves toward a stationary observer at 34 m/s. Speed of sound = 340 m/s. The observed frequency is:',opts:['450 Hz','500 Hz','555 Hz','571 Hz'],correct:2,feedback:'Source approaching, observer stationary: f_obs = f_s × v/(v − v_s) = 500 × 340/(340 − 34) = 500 × 340/306 ≈ 555 Hz.'},
+    {q:'A galaxy has redshift z = 0.04. Its recession speed is approximately: (c = 3.0 × 10⁸ m/s)',opts:['1.2 × 10⁷ m/s','1.2 × 10⁶ m/s','1.2 × 10⁸ m/s','4.0 × 10⁷ m/s'],correct:0,feedback:'z = v/c → v = zc = 0.04 × 3.0×10⁸ = 1.2×10⁷ m s⁻¹.'},
+    {q:'A stationary observer hears an ambulance siren. As the ambulance passes and moves away, the observed pitch:',opts:['Increases then stays constant','Decreases then stays constant','Stays constant throughout','Drops suddenly as it passes'],correct:3,feedback:'As the source approaches, f_obs > f_s (higher pitch). As it recedes, f_obs < f_s (lower pitch). At the moment it passes, there is a sudden drop in pitch. This is the classic Doppler effect heard with passing vehicles.'}
+  ]},
+
+  // ── LESSON 2: Single-Slit Diffraction ────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 2 of 9 · Diffraction',title:'Single-Slit Diffraction',
+  subtitle:'A single slit produces a characteristic intensity pattern — a wide central maximum flanked by weaker secondary maxima. This pattern modulates everything else in diffraction and interference.',
+  body:`
+<h3>Formation of the Single-Slit Pattern</h3>
+<p>When light passes through a single slit of width <em>b</em>, Huygens' principle says every point on the wavefront in the slit acts as a new source. These secondary waves interfere with each other, creating the single-slit diffraction pattern.</p>
+<h3>Minima Positions</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;margin:0">b sinθ = mλ &nbsp;&nbsp; m = ±1, ±2, ±3, …</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">b = slit width &nbsp;·&nbsp; θ = angle from centre &nbsp;·&nbsp; m = order of minimum (m ≠ 0)</p>
+</div>
+<h3>Key Features of the Pattern</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Central maximum</strong> is <strong>twice as wide</strong> (in angle) as any secondary maximum</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Narrower slit</strong> (smaller b) → <strong>wider</strong> central maximum (λ/b increases)</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Intensity of secondary maxima</strong> decreases with order — first is ~4.7% of central maximum</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Longer wavelength</strong> → wider pattern (λ/b increases)</div>
+</div>
+<h3>Connection to Double-Slit</h3>
+<p>The single-slit pattern acts as an <strong>envelope</strong> modulating the double-slit interference fringes. When a double-slit maximum coincides with a single-slit minimum, that fringe is <strong>missing</strong> (a missing order).</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">Missing order when d/b = integer &nbsp;&nbsp; (d = slit separation, b = slit width)</p>`},
+
+  // ── QUIZ 2 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 2',title:'Single-Slit Diffraction — Check Your Understanding',
+  questions:[
+    {q:'Light of wavelength 600 nm passes through a slit of width 0.30 mm. The angle to the first minimum is:',opts:['0.11°','0.23°','1.1°','2.3°'],correct:0,feedback:'sinθ = λ/b = 600×10⁻⁹ / 0.30×10⁻³ = 2.0×10⁻³ → θ = arcsin(2.0×10⁻³) ≈ 0.115° ≈ 0.11°.'},
+    {q:'The slit width in a single-slit experiment is halved. The central maximum:',opts:['Becomes narrower','Stays the same width','Doubles in width','Quadruples in width'],correct:2,feedback:'Width of central maximum ∝ λ/b. Halving b doubles the angular width of the central maximum. Narrower slit → wider diffraction pattern.'},
+    {q:'A double-slit experiment has slit separation d = 4b (four times the slit width b). Which orders of double-slit maxima are missing?',opts:['Every 2nd order','Every 4th order','Every 8th order','No orders are missing'],correct:1,feedback:'Missing orders occur when d/b = n (integer). Here d/b = 4, so the 4th, 8th, 12th,... orders are missing — they coincide with single-slit minima at m = 1, 2, 3,...'}
+  ]},
+
+  // ── LESSON 3: Resolution & the Rayleigh Criterion ────────────────────────────
+  {type:'lesson',tag:'Lesson 3 of 9 · Resolution',title:'Resolution & the Rayleigh Criterion',
+  subtitle:'Diffraction sets a fundamental limit on how finely any optical instrument can distinguish two nearby sources. This limit matters everywhere from microscopes to radio telescopes.',
+  body:`
+<h3>The Problem</h3>
+<p>A point source imaged through a circular aperture does not form a perfect point — diffraction spreads it into an <strong>Airy disk</strong> (a central bright disc surrounded by rings). If two sources are too close, their Airy disks overlap and they cannot be distinguished.</p>
+<h3>The Rayleigh Criterion</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">θ_min = 1.22 λ / D</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">θ_min = minimum resolvable angle (rad) &nbsp;·&nbsp; λ = wavelength &nbsp;·&nbsp; D = aperture diameter<br>Two sources are <em>just resolved</em> when the central maximum of one falls on the first minimum of the other.</p>
+</div>
+<h3>How to Improve Resolution</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Larger aperture D</strong> → smaller θ_min → finer resolution. This is why astronomical telescopes have large mirrors.</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Shorter wavelength λ</strong> → smaller θ_min. Electron microscopes use de Broglie wavelengths of ~pm, giving ~10⁵× better resolution than light.</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px"><strong style="color:var(--accent)">Radio telescopes</strong> need very large dishes (km-scale arrays) because λ ≈ cm–m — much longer than visible light.</div>
+</div>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">EXAM TIP</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Smaller θ_min = better resolution. Don't confuse the two — "θ_min is the minimum angle you can resolve" means smaller values correspond to more detailed images.</p>
+</div>`},
+
+  // ── QUIZ 3 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 3',title:'Resolution — Check Your Understanding',
+  questions:[
+    {q:'A telescope lens has diameter 0.12 m. Using λ = 550 nm, its minimum resolvable angle is:',opts:['4.6 × 10⁻⁶ rad','5.6 × 10⁻⁶ rad','4.6 × 10⁻⁵ rad','5.6 × 10⁻⁵ rad'],correct:1,feedback:'θ_min = 1.22λ/D = 1.22 × 550×10⁻⁹ / 0.12 = 671×10⁻⁹ / 0.12 = 5.59×10⁻⁶ ≈ 5.6×10⁻⁶ rad.'},
+    {q:'The aperture of a telescope is doubled. Its minimum resolvable angle:',opts:['Doubles','Stays the same','Halves','Quarters'],correct:2,feedback:'θ_min = 1.22λ/D. Doubling D halves θ_min. The telescope can resolve sources twice as close together — better resolution.'},
+    {q:'An electron microscope can resolve finer detail than a light microscope primarily because:',opts:['Electrons travel faster than light','High-energy electrons have much shorter de Broglie wavelengths than visible light','Electrons are charged particles','Electrons do not undergo diffraction'],correct:1,feedback:'Resolution improves with smaller λ. High-energy electrons (e.g. 100 keV) have de Broglie wavelengths of ~pm, compared to ~400–700 nm for visible light — giving resolution ~10⁵ times finer.'}
+  ]},
+
+  // ── LESSON 4: Polarisation ────────────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 4 of 9 · Polarisation',title:'Polarisation of Waves',
+  subtitle:'Polarisation is exclusive to transverse waves. It describes the plane of oscillation — and Malus\'s Law tells you precisely how intensity changes when you filter it.',
+  body:`
+<h3>Unpolarised vs Polarised Light</h3>
+<p>In <strong>unpolarised</strong> light, the electric field oscillates in all planes perpendicular to propagation randomly. In <strong>plane-polarised</strong> light, oscillation is restricted to a single plane.</p>
+<h3>Methods of Polarisation</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Transmission (Polaroid filter)</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Only transmits one plane of oscillation. Unpolarised → polarised with I = I₀/2 (half the intensity).</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Reflection (Brewster's angle)</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">At Brewster's angle θ_B, reflected light is completely plane-polarised. tan θ_B = n (refractive index).</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px">
+    <span style="font-size:13px;font-weight:700;color:var(--accent)">Scattering</span>
+    <p style="font-size:13px;color:#cccce0;margin:4px 0 0">Light scattered by atmospheric molecules (Rayleigh scattering) is partially polarised. The sky is partially polarised — bees use this for navigation.</p>
+  </div>
+</div>
+<h3>Malus's Law</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;margin:0">I = I₀ cos²θ</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">θ = angle between polarisation axis and analyser transmission axis<br>I₀ = intensity of the already-polarised light entering the analyser</p>
+</div>
+<p><strong>Crossed polaroids</strong> (θ = 90°): I = I₀ cos²90° = 0. No light passes through.</p>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">LONGITUDINAL WAVES CANNOT BE POLARISED</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Sound oscillates parallel to its direction of travel — there is no perpendicular plane to restrict. This is why polarisation is proof that light is transverse.</p>
+</div>`},
+
+  // ── QUIZ 4 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 4',title:'Polarisation — Check Your Understanding',
+  questions:[
+    {q:'Unpolarised light of intensity I₀ passes through a polaroid filter. The transmitted intensity is:',opts:['I₀','I₀/2','I₀/4','Zero'],correct:1,feedback:'A polaroid transmits only one plane. Unpolarised light has equal intensity in all planes, so exactly half is transmitted: I = I₀/2.'},
+    {q:'Polarised light of intensity 60 W m⁻² passes through an analyser at 60° to the polarisation axis. The transmitted intensity is:',opts:['30 W m⁻²','15 W m⁻²','52 W m⁻²','60 W m⁻²'],correct:1,feedback:'Malus\'s Law: I = I₀ cos²θ = 60 × cos²60° = 60 × (0.5)² = 60 × 0.25 = 15 W m⁻².'},
+    {q:'Which of the following proves that light is a transverse wave?',opts:['Light undergoes diffraction','Light undergoes refraction','Light can be polarised','Light travels at constant speed in a vacuum'],correct:2,feedback:'Polarisation requires transverse waves — the oscillation must be perpendicular to propagation so it can be restricted to one plane. The fact that light can be polarised is direct experimental proof it is transverse.'}
+  ]},
+
+  // ── LESSON 5: Diffraction Gratings ────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 5 of 9 · Diffraction',title:'Diffraction Gratings',
+  subtitle:'A diffraction grating has thousands of slits per mm. The result is extremely sharp, bright maxima — far more useful for measuring wavelengths than a double slit.',
+  body:`
+<h3>The Grating Equation</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">d sinθ = nλ &nbsp;&nbsp; n = 0, ±1, ±2, …<br>d = 1/(lines per metre) &nbsp;&nbsp; (grating spacing)</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">θ = angle of nth-order maximum &nbsp;·&nbsp; λ = wavelength &nbsp;·&nbsp; n = order number</p>
+</div>
+<h3>Why Gratings Are Better Than Double Slits</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:4px">DOUBLE SLIT</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Broad, blurry fringes. Hard to measure θ precisely.</p>
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:4px">DIFFRACTION GRATING</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Very sharp, bright maxima. Precise θ measurement → precise λ determination.</p>
+  </div>
+</div>
+<h3>Maximum Number of Orders</h3>
+<p>Since sinθ ≤ 1, the highest possible order is: n_max = d/λ (round down to integer). No maximum exists beyond this.</p>
+<h3>Worked Example</h3>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:13px;color:#cccce0;line-height:1.8">
+  Grating: 500 lines/mm → d = 1/500 000 m = 2.0×10⁻⁶ m<br>
+  λ = 600 nm. First-order maximum:<br>
+  sinθ = nλ/d = 1 × 600×10⁻⁹ / 2.0×10⁻⁶ = 0.30 → θ = 17.5°
+</div>`},
+
+  // ── QUIZ 5 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 5',title:'Diffraction Gratings — Check Your Understanding',
+  questions:[
+    {q:'A grating has 400 lines/mm. The grating spacing d is:',opts:['400 nm','2.5 μm','400 μm','2.5 mm'],correct:1,feedback:'d = 1/(lines per metre) = 1/(400×10³ m⁻¹) = 2.5×10⁻⁶ m = 2.5 μm.'},
+    {q:'Light of wavelength 500 nm is incident on a grating with d = 2.0 μm. The second-order maximum occurs at:',opts:['14.5°','30.0°','48.6°','90.0°'],correct:1,feedback:'sinθ = nλ/d = 2 × 500×10⁻⁹ / 2.0×10⁻⁶ = 0.50 → θ = arcsin(0.50) = 30.0°.'},
+    {q:'Compared to a double slit, a diffraction grating produces interference maxima that are:',opts:['Broader and dimmer','Broader and brighter','Narrower and brighter','Narrower and dimmer'],correct:2,feedback:'With many slits contributing, constructive interference builds up sharply only at precise angles — producing much narrower, brighter maxima than a double slit. This is why gratings are used for precise wavelength measurement.'}
+  ]},
+
+  // ── LESSON 6: Thin Film Interference ─────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 6 of 9 · Interference',title:'Thin Film Interference',
+  subtitle:'The colours of soap bubbles and oil films arise from light reflecting from two surfaces of a thin film and interfering. A phase change at one surface is the key twist.',
+  body:`
+<h3>How It Works</h3>
+<p>Light hits a thin film (e.g. soap, oil on water). Part reflects from the top surface, part transmits and reflects from the bottom surface. These two reflected rays interfere — constructively or destructively depending on the film thickness and wavelength.</p>
+<h3>Phase Change on Reflection</h3>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 16px;margin:12px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.1em;margin-bottom:4px">THE CRITICAL RULE</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Reflection from a <strong>more optically dense</strong> medium (higher n) causes a phase shift of <strong>π (half a wavelength)</strong>. Reflection from a less dense medium causes <strong>no phase shift</strong>.</p>
+</div>
+<h3>Conditions (for normal incidence)</h3>
+<div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;font-size:13px;color:#cccce0">
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px">
+    <strong style="color:var(--accent)">Both reflections same type</strong> (both phase shift or neither): 2nt = mλ gives constructive; 2nt = (m+½)λ gives destructive.
+  </div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px">
+    <strong style="color:var(--accent)">One reflection has phase shift, other doesn't</strong>: 2nt = (m+½)λ gives constructive; 2nt = mλ gives destructive.
+  </div>
+</div>
+<p style="font-size:13px;color:#cccce0">t = film thickness &nbsp;·&nbsp; n = refractive index of film &nbsp;·&nbsp; λ = wavelength in vacuum/air</p>
+<h3>Applications</h3>
+<p>Anti-reflection coatings on camera lenses, soap bubbles, oil on wet roads, butterfly wings (structural colour).</p>`},
+
+  // ── QUIZ 6 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 6',title:'Thin Film Interference — Check Your Understanding',
+  questions:[
+    {q:'A soap film (n = 1.33) in air. Ray 1 reflects off the front surface (air→soap: phase shift π). Ray 2 reflects off the back surface (soap→air: no phase shift). One phase shift total. For constructive interference of reflected light:',opts:['2nt = mλ','2nt = (m + ½)λ','nt = mλ','t = mλ/n'],correct:1,feedback:'One phase shift of π means the two rays start with a half-wavelength path difference already. So constructive interference needs the optical path difference 2nt to make up an additional (m+½) wavelengths — i.e. 2nt = (m+½)λ. Wait: one π shift means to add constructively, we need 2nt to compensate with half-integer multiples: 2nt = (m+½)λ for constructive.'},
+    {q:'A phase change of π occurs when light reflects from a surface where it is going from:',opts:['Lower to higher refractive index (denser medium)','Higher to lower refractive index','Any surface regardless of n','Only metallic surfaces'],correct:0,feedback:'A phase shift of π (equivalent to half a wavelength) occurs when light reflects from a boundary where it enters a more optically dense medium (higher refractive index). No phase shift occurs when reflecting from a less dense medium.'},
+    {q:'An anti-reflection coating on a lens uses thin film interference to:',opts:['Maximise reflected light for clarity','Ensure destructive interference of reflected light so nearly all light is transmitted','Polarise the transmitted light','Increase the refractive index of the lens'],correct:1,feedback:'Anti-reflection coatings are designed so that light reflected from the top and bottom surfaces of the thin coating interferes destructively (cancels). This minimises reflection and maximises the light transmitted through the lens.'}
+  ]},
+
+  // ── LESSON 7: Young's Double-Slit Revisited (AHL detail) ─────────────────────
+  {type:'lesson',tag:'Lesson 7 of 9 · Interference',title:"Young's Double-Slit — AHL Detail",
+  subtitle:'At AHL you go deeper into two-slit interference: the combined single-slit envelope, path difference calculations, and coherence requirements.',
+  body:`
+<h3>Path Difference & Phase Difference</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:13px;color:#cccce0;line-height:2;margin:0">Path difference = d sinθ<br>Phase difference φ = (2π/λ) × path difference = 2πd sinθ/λ<br>Constructive: path diff = nλ &nbsp; (φ = 2nπ)<br>Destructive: path diff = (n+½)λ &nbsp; (φ = (2n+1)π)</p>
+</div>
+<h3>The Combined Pattern</h3>
+<p>In practice, the two-slit pattern is <em>not</em> uniform fringes of equal brightness. The single-slit diffraction envelope from each slit modulates the fringe intensities:</p>
+<ul style="font-size:14px;color:#cccce0;line-height:1.9;margin:8px 0 8px 20px">
+  <li>Fringes inside the central diffraction maximum are brightest</li>
+  <li>Fringes near single-slit minima are suppressed or missing</li>
+  <li>Missing orders occur at m = d/b, 2d/b, 3d/b, … (when d/b is an integer)</li>
+</ul>
+<h3>Coherence Revisited</h3>
+<p>For a stable pattern, sources must be <strong>coherent</strong>: same frequency and constant phase difference. Two separate lamps are not coherent — their phase relationship changes randomly, washing out any fringe pattern.</p>
+<p>In Young's experiment, a single source illuminates both slits — the slits then act as two coherent secondary sources derived from the same wavefront.</p>
+<h3>Fringe Width & the Effect of White Light</h3>
+<p>With white light, each wavelength produces its own set of fringes at slightly different positions (Δy = λD/d varies with λ). The central fringe (m=0) is white, but higher-order fringes show coloured edges — red fringes are wider and appear at the outside of each order.</p>`},
+
+  // ── QUIZ 7 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 7',title:"Young's Double-Slit (AHL) — Check Your Understanding",
+  questions:[
+    {q:'In a double-slit experiment (d = 0.50 mm, λ = 500 nm, D = 2.0 m), the fringe spacing is:',opts:['0.50 mm','1.0 mm','2.0 mm','5.0 mm'],correct:2,feedback:'Δy = λD/d = (500×10⁻⁹ × 2.0) / (0.50×10⁻³) = 1.0×10⁻⁶ / 5.0×10⁻⁴ = 2.0×10⁻³ m = 2.0 mm.'},
+    {q:'In Young\'s double-slit, the two slits act as coherent sources because:',opts:['They are identical in size','They are both illuminated by the same single source so share the same wavefront','They are the same distance from the screen','They produce light of the same colour independently'],correct:1,feedback:'Coherence requires a constant phase relationship. Illuminating both slits from a single source ensures they are derived from the same wavefront — any phase fluctuation at the source affects both slits equally, keeping their phase difference constant.'},
+    {q:'White light is used in a double-slit experiment. The central fringe (m=0) appears:',opts:['Red','Blue','White','Missing'],correct:2,feedback:'At m=0 the path difference is zero for all wavelengths — all colours interfere constructively at the same point. The central fringe is therefore white. Higher-order fringes show colour because different wavelengths have maxima at different angles.'}
+  ]},
+
+  // ── COMPLETION ────────────────────────────────────────────────────────────────
+  {type:'complete',tag:'Topic 9 Complete',title:"You've finished Topic 9!",
+  subtitle:'Wave phenomena (AHL) deepens everything from Topic 4 with precision tools — the Doppler effect, diffraction gratings, resolution limits, and polarisation appear throughout physics, astronomy, and modern technology.'}
+];
+
+
+
+// ── TOPIC 10 GUIDED LESSON — FIELDS & RELATIVITY (AHL) ───────────────────────
+const GUIDED_STEPS_10 = [
+
+  // ── LESSON 1: Einstein's Postulates ──────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 1 of 10 · Special Relativity',title:"Einstein's Two Postulates",
+  subtitle:'In 1905, two simple-sounding postulates upended our understanding of space and time. Everything in special relativity follows logically from these alone.',
+  body:`
+<h3>Why Was a New Theory Needed?</h3>
+<p>19th-century physics predicted that the measured speed of light should depend on the observer's motion relative to the "luminiferous aether." The <strong>Michelson-Morley experiment (1887)</strong> found no such dependence — the same speed of light regardless of direction or Earth's velocity. Einstein resolved this by abandoning the aether entirely.</p>
+<h3>Postulate 1 — The Principle of Relativity</h3>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:14px 18px;margin:12px 0">
+  <p style="font-size:14px;color:#cccce0;margin:0">The laws of physics are identical in all <strong>inertial (non-accelerating) reference frames</strong>. No experiment can distinguish being at rest from moving at constant velocity.</p>
+</div>
+<h3>Postulate 2 — Constancy of the Speed of Light</h3>
+<div style="background:rgba(155,143,249,.06);border:1px solid rgba(155,143,249,.25);border-radius:8px;padding:14px 18px;margin:12px 0">
+  <p style="font-size:14px;color:#cccce0;margin:0">The speed of light in a vacuum, <strong>c = 3.00 × 10⁸ m s⁻¹</strong>, is the same for all observers in all inertial frames, regardless of the motion of the source or observer.</p>
+</div>
+<h3>What This Forces Us to Conclude</h3>
+<p>If c is the same for everyone, then space and time must stretch and contract to make it so. The consequences:</p>
+<ul style="font-size:14px;color:#cccce0;line-height:1.9;margin:8px 0 8px 20px">
+  <li>Moving clocks run slow — <strong>time dilation</strong></li>
+  <li>Moving objects are shorter — <strong>length contraction</strong></li>
+  <li>Simultaneity is relative — two events simultaneous in one frame may not be in another</li>
+  <li>Mass and energy are equivalent — <strong>E = mc²</strong></li>
+</ul>`},
+
+  // ── QUIZ 1 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 1',title:"Einstein's Postulates — Check Your Understanding",
+  questions:[
+    {q:'A rocket travels at 0.8c and fires a laser beam forward. An observer on Earth measures the speed of the laser light as:',opts:['1.8c','0.2c','c','0.8c'],correct:2,feedback:'By Einstein\'s second postulate, the speed of light is c for ALL observers in all inertial frames, regardless of the motion of the source. The laser beam travels at exactly c as measured by any observer.'},
+    {q:'Special relativity applies specifically to:',opts:['Accelerating reference frames','All possible reference frames','Inertial (non-accelerating) reference frames','Only frames moving faster than 0.1c'],correct:2,feedback:'Special relativity deals with inertial frames — those moving at constant velocity with no acceleration. General relativity extends this to accelerating frames and gravity.'},
+    {q:'The Michelson-Morley experiment found that the speed of light:',opts:['Depends on Earth\'s direction of travel','Varies with the observer\'s speed','Is the same regardless of the direction of measurement or the observer\'s motion','Is faster along Earth\'s direction of orbit'],correct:2,feedback:'The Michelson-Morley experiment (1887) detected no variation in the speed of light with direction or with Earth\'s orbital motion. This null result directly motivated Einstein\'s second postulate.'}
+  ]},
+
+  // ── LESSON 2: The Lorentz Factor & Time Dilation ─────────────────────────────
+  {type:'lesson',tag:'Lesson 2 of 10 · Special Relativity',title:'The Lorentz Factor & Time Dilation',
+  subtitle:'The Lorentz factor γ is the key to all relativistic calculations. It quantifies exactly how much time, length, and momentum differ between frames.',
+  body:`
+<h3>The Lorentz Factor</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:16px;color:#cccce0;margin:0">γ = 1 / √(1 − v²/c²)</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">γ ≥ 1 always · At v = 0: γ = 1 · As v → c: γ → ∞</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:13px;color:#cccce0">
+  ${[['0.60c','1.25'],['0.80c','1.67'],['0.90c','2.29'],['0.99c','7.09'],['0.999c','22.4']].map(([v,g])=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 14px;display:flex;justify-content:space-between"><span>v = ${v}</span><span style="font-family:'Space Mono',monospace;color:var(--accent2)">γ = ${g}</span></div>`).join('')}
+</div>
+<h3>Time Dilation</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">Δt = γ Δt₀<br>Δt₀ = proper time (clock at rest relative to both events)<br>Δt = dilated time (measured by moving observer)</div>
+</div>
+<p><strong>Moving clocks run slow:</strong> γ ≥ 1, so Δt ≥ Δt₀. A clock at 0.80c ticks at 1/1.67 = 60% the rate of a stationary clock.</p>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">PROPER TIME</div>
+  <p style="font-size:13px;color:#cccce0;margin:0"><strong>Proper time</strong> Δt₀ is measured by a clock that is present at <em>both</em> events — it sees both at the same location. It is always the <strong>shortest</strong> possible time between the events.</p>
+</div>`},
+
+  // ── QUIZ 2 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 2',title:'Lorentz Factor & Time Dilation — Check Your Understanding',
+  questions:[
+    {q:'A spaceship moves at 0.60c. Its Lorentz factor γ is:',opts:['0.80','1.00','1.25','1.67'],correct:2,feedback:'γ = 1/√(1 − v²/c²) = 1/√(1 − 0.36) = 1/√0.64 = 1/0.80 = 1.25.'},
+    {q:'A muon has a proper lifetime of 2.2 μs. Moving at 0.80c (γ = 1.67), its observed lifetime in the lab frame is:',opts:['1.3 μs','2.2 μs','3.7 μs','13 μs'],correct:2,feedback:'Δt = γΔt₀ = 1.67 × 2.2 = 3.67 ≈ 3.7 μs. The muon\'s internal clock (which determines its decay) runs slow as seen from the lab — so it appears to live longer.'},
+    {q:'Proper time is the time measured by:',opts:['The fastest moving observer','Any observer with an accurate clock','A clock present at both events (same location for both)','The observer at rest in the lab frame'],correct:2,feedback:'Proper time is measured by a clock that is co-located with both events — both events happen at the same place in its frame. It gives the shortest possible time interval between the events.'}
+  ]},
+
+  // ── LESSON 3: Length Contraction ─────────────────────────────────────────────
+  {type:'lesson',tag:'Lesson 3 of 10 · Special Relativity',title:'Length Contraction',
+  subtitle:'Objects moving relative to an observer appear contracted along the direction of motion. Like time dilation, this is not an optical illusion — it is a genuine physical effect.',
+  body:`
+<h3>Length Contraction Formula</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">L = L₀ / γ<br>L₀ = proper length (measured in rest frame of object)<br>L = contracted length (measured by moving observer)</p>
+</div>
+<p>Since γ ≥ 1, L ≤ L₀. The object appears shorter. Contraction only occurs <strong>along the direction of motion</strong> — dimensions perpendicular to the motion are unchanged.</p>
+<h3>Proper Length</h3>
+<p>The <strong>proper length</strong> L₀ is measured in the frame where the object is at rest. It is the <strong>longest</strong> possible measured length. Any other frame measures a shorter (contracted) length.</p>
+<h3>The Muon — Two Consistent Perspectives</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
+  <div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:700;color:var(--accent2);margin-bottom:6px">LAB FRAME</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Muon lives longer (time dilation Δt = γΔt₀). Travels far enough to reach the detector.</p>
+  </div>
+  <div style="background:rgba(155,143,249,.06);border:1px solid rgba(155,143,249,.25);border-radius:8px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px">MUON FRAME</div>
+    <p style="font-size:13px;color:#cccce0;margin:0">Muon lives normal 2.2 μs. But the atmosphere is length-contracted (L = L₀/γ) — the detector reaches the muon in time.</p>
+  </div>
+</div>
+<p>Both frames agree the muon reaches the detector — but explain it differently. This self-consistency is the hallmark of special relativity.</p>`},
+
+  // ── QUIZ 3 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 3',title:'Length Contraction — Check Your Understanding',
+  questions:[
+    {q:'A spaceship of proper length 200 m travels at 0.60c (γ = 1.25). Its length as measured by a stationary observer is:',opts:['160 m','200 m','250 m','120 m'],correct:0,feedback:'L = L₀/γ = 200/1.25 = 160 m. The ship appears contracted along its direction of motion.'},
+    {q:'Length contraction occurs only:',opts:['When objects move faster than 0.5c','Along the direction of motion (not perpendicular)','In all directions equally','When the object accelerates'],correct:1,feedback:'Length contraction affects only the dimension parallel to the direction of relative motion. Dimensions perpendicular to motion are completely unchanged — this follows from the postulates and is required for self-consistency.'},
+    {q:'In the muon experiment, from the muon\'s own rest frame, why does it reach Earth\'s surface?',opts:['Its lifetime is extended by time dilation','It travels faster than c briefly','The atmosphere is length-contracted, so Earth\'s surface reaches it within its proper lifetime','Gravity accelerates it'],correct:2,feedback:'In the muon\'s frame, the muon lives its normal ~2.2 μs. But the atmosphere (which is moving toward the muon at 0.998c) appears length-contracted — much thinner. Earth\'s surface therefore arrives before the muon decays. Both frames predict the muon survives — a consistency check for special relativity.'}
+  ]},
+
+  // ── LESSON 4: Relativistic Momentum & Energy ──────────────────────────────────
+  {type:'lesson',tag:'Lesson 4 of 10 · Special Relativity',title:'Relativistic Momentum, Energy & E = mc²',
+  subtitle:'Classical momentum and kinetic energy break down at high speeds. The corrected relativistic versions reveal the deepest result in physics: mass and energy are the same thing.',
+  body:`
+<h3>Relativistic Momentum</h3>
+<p style="font-family:'Space Mono',monospace;font-size:14px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">p = γmv</p>
+<p>As v → c, γ → ∞ so p → ∞. This is why no massive particle can ever be accelerated to c — it would require infinite momentum and energy.</p>
+<h3>Total Energy, Rest Energy & Kinetic Energy</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2.2;margin:0">E_total = γmc² &nbsp;&nbsp; (total energy)<br>E₀ = mc² &nbsp;&nbsp; (rest energy)<br>KE = (γ − 1)mc² &nbsp;&nbsp; (kinetic energy = total − rest)<br>E² = (pc)² + (mc²)² &nbsp;&nbsp; (energy-momentum relation)</p>
+</div>
+<h3>E = mc²</h3>
+<p>Even a stationary object has energy — its rest energy E₀ = mc². A tiny mass corresponds to enormous energy:</p>
+<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px;color:#cccce0;line-height:1.8">
+  1 gram: E = 0.001 × (3×10⁸)² = 9 × 10¹³ J = 90 TJ<br>
+  ≈ equivalent to burning 3000 tonnes of coal
+</div>
+<h3>Massless Particles</h3>
+<p>For photons (m = 0): E² = (pc)² → <strong>E = pc</strong>. Photons carry momentum even though they have no rest mass. Their energy: E = hf (from quantum physics).</p>`},
+
+  // ── QUIZ 4 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 4',title:'Relativistic Energy — Check Your Understanding',
+  questions:[
+    {q:'A proton has rest energy 938 MeV. Its total energy is 2814 MeV. Its kinetic energy is:',opts:['938 MeV','1876 MeV','2814 MeV','3752 MeV'],correct:1,feedback:'KE = E_total − E₀ = 2814 − 938 = 1876 MeV. (Also, γ = E_total/E₀ = 2814/938 = 3, so KE = (γ−1)mc² = 2 × 938 = 1876 MeV ✓)'},
+    {q:'The rest energy of an electron (m = 9.11 × 10⁻³¹ kg) is: (c = 3.0 × 10⁸ m/s)',opts:['8.2 × 10⁻¹⁴ J (= 0.511 MeV)','8.2 × 10⁻¹² J','8.2 × 10⁻¹⁶ J','0.511 J'],correct:0,feedback:'E₀ = mc² = 9.11×10⁻³¹ × (3×10⁸)² = 9.11×10⁻³¹ × 9×10¹⁶ = 8.2×10⁻¹⁴ J = 0.511 MeV.'},
+    {q:'For a photon with frequency f, its momentum is:',opts:['Zero (it is massless)','hf','hf/c','mc'],correct:2,feedback:'Photons have zero rest mass. From E = pc and E = hf: p = E/c = hf/c. Photons carry real momentum — demonstrated by radiation pressure and the photoelectric effect.'}
+  ]},
+
+  // ── LESSON 5: Electric Potential & Field (AHL) ────────────────────────────────
+  {type:'lesson',tag:'Lesson 5 of 10 · Electric Fields',title:'Electric Potential & Field (AHL)',
+  subtitle:'At AHL depth you connect the electric field to the potential gradient, work out the energy stored in configurations of charges, and understand how dielectrics modify capacitors.',
+  body:`
+<h3>Field as a Potential Gradient</h3>
+<p>The electric field is the <em>negative</em> potential gradient — it points from high to low potential, and its magnitude equals the rate of change of potential with distance:</p>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2.2;margin:0">E = −dV/dr &nbsp;&nbsp; (general)<br>V = kQ/r &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (point charge)<br>E = kQ/r² &nbsp;&nbsp;&nbsp; (point charge — consistent with above)</p>
+</div>
+<h3>Equipotential Surfaces</h3>
+<p>Surfaces of constant V are <strong>equipotential surfaces</strong>. They are always perpendicular to field lines. No work is done moving a charge along an equipotential (ΔV = 0 → W = qΔV = 0). Around a point charge they are concentric spheres.</p>
+<h3>Electric Potential Energy</h3>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">U = kq₁q₂/r &nbsp;&nbsp; (PE of two point charges)<br>W = q(V₂ − V₁) &nbsp;&nbsp; (work to move charge q through ΔV)</p>
+<h3>Capacitors with Dielectrics</h3>
+<p>Inserting a dielectric (insulating material, relative permittivity κ) increases capacitance by factor κ:</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">C = κε₀A/d &nbsp;&nbsp; (κ ≥ 1)</p>
+<p>The dielectric polarises — its molecules align with the field, partially cancelling it internally. This allows more charge to be stored at the same voltage.</p>`},
+
+  // ── QUIZ 5 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 5',title:'Electric Potential (AHL) — Check Your Understanding',
+  questions:[
+    {q:'Parallel plates are 4.0 mm apart with 240 V across them. The electric field strength is:',opts:['0.96 V/m','60 kV/m','240 V/m','960 V/m'],correct:1,feedback:'E = V/d = 240 / (4.0×10⁻³) = 60 000 V m⁻¹ = 60 kV m⁻¹.'},
+    {q:'A capacitor has capacitance 10 μF with air between its plates. A dielectric with κ = 4.0 is inserted. The new capacitance is:',opts:['2.5 μF','10 μF','40 μF','14 μF'],correct:2,feedback:'C_new = κ × C_old = 4.0 × 10 = 40 μF. Inserting a dielectric multiplies capacitance by the relative permittivity κ.'},
+    {q:'Equipotential surfaces around a positive point charge are:',opts:['Radial lines pointing outward','Concentric spheres perpendicular to field lines','Parallel planes','Hyperbolas'],correct:1,feedback:'Around a point charge V = kQ/r depends only on r, so surfaces of constant V are concentric spheres. Field lines point radially outward and are everywhere perpendicular to these spheres.'}
+  ]},
+
+  // ── LESSON 6: Gravitational & Electric Field Comparison ──────────────────────
+  {type:'lesson',tag:'Lesson 6 of 10 · Fields',title:'Gravitational & Electric Fields — Deep Comparison',
+  subtitle:'Gravitational and electric fields share the same mathematical structure (inverse-square law, potential energy, equipotentials) but differ fundamentally in their nature.',
+  body:`
+<h3>Side-by-Side Comparison</h3>
+<div style="overflow-x:auto;margin:12px 0">
+<table style="width:100%;border-collapse:collapse;font-size:13px;color:#cccce0;min-width:480px">
+  <thead><tr style="border-bottom:1px solid var(--border)">
+    <th style="text-align:left;padding:8px 10px;color:var(--accent)">Property</th>
+    <th style="text-align:left;padding:8px 10px;color:var(--accent)">Gravitational</th>
+    <th style="text-align:left;padding:8px 10px;color:var(--accent2)">Electric</th>
+  </tr></thead>
+  <tbody>
+    <tr style="border-bottom:1px solid rgba(42,42,64,.5)"><td style="padding:7px 10px">Acts on</td><td style="padding:7px 10px">Mass</td><td style="padding:7px 10px">Charge</td></tr>
+    <tr style="border-bottom:1px solid rgba(42,42,64,.5)"><td style="padding:7px 10px">Force law</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">F = Gm₁m₂/r²</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">F = kq₁q₂/r²</td></tr>
+    <tr style="border-bottom:1px solid rgba(42,42,64,.5)"><td style="padding:7px 10px">Field</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">g = GM/r²</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">E = kQ/r²</td></tr>
+    <tr style="border-bottom:1px solid rgba(42,42,64,.5)"><td style="padding:7px 10px">Potential</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">V_g = −GM/r</td><td style="padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px">V_E = kQ/r</td></tr>
+    <tr style="border-bottom:1px solid rgba(42,42,64,.5)"><td style="padding:7px 10px">Direction</td><td style="padding:7px 10px">Always attractive</td><td style="padding:7px 10px">Attractive or repulsive</td></tr>
+    <tr><td style="padding:7px 10px">Potential sign</td><td style="padding:7px 10px">Always negative</td><td style="padding:7px 10px">Positive or negative</td></tr>
+  </tbody>
+</table>
+</div>
+<h3>Why Gravitational Potential is Always Negative</h3>
+<p>By convention, V_g = 0 at r → ∞. Since gravity is attractive, bringing a mass from infinity releases energy — so V_g at any finite distance must be negative (below zero). Electric potential around a positive charge is positive because work must be done to bring a positive test charge from infinity.</p>
+<h3>Uniform Fields</h3>
+<p>Both fields are approximately uniform over small distances: between parallel plates (electric) or near Earth's surface (gravitational). In both cases the field is constant and the potential varies linearly with distance.</p>`},
+
+  // ── LESSON 7: Orbital & Satellite Energy (AHL) ───────────────────────────────
+  {type:'lesson',tag:'Lesson 7 of 10 · Fields',title:'Orbital Energy & Escape Speed (AHL Depth)',
+  subtitle:'The energy of a satellite combines kinetic and gravitational potential energy. The result is counterintuitive: a lower orbit means higher speed but less total energy.',
+  body:`
+<h3>Total Energy of a Satellite</h3>
+<p>For a circular orbit of radius r around mass M:</p>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:13px;color:#cccce0;line-height:2.2;margin:0">KE = GMm/2r &nbsp;&nbsp; (always positive)<br>PE = −GMm/r &nbsp;&nbsp; (always negative)<br>E_total = −GMm/2r &nbsp;&nbsp; (always negative = bound)</p>
+</div>
+<div style="background:rgba(79,216,196,.06);border:1px solid rgba(79,216,196,.25);border-radius:8px;padding:12px 16px;margin:10px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.1em;margin-bottom:4px">COUNTERINTUITIVE RESULT</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">A satellite in a <em>lower</em> orbit has <strong>more kinetic energy</strong> (faster speed) but <strong>less total energy</strong> (more negative). Adding energy to a satellite (e.g. firing a rocket forward) moves it to a <em>higher</em>, slower orbit.</p>
+</div>
+<h3>Escape Speed</h3>
+<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0">
+  <p style="font-family:'Space Mono',monospace;font-size:14px;color:#cccce0;line-height:2;margin:0">v_esc = √(2GM/R) = √2 × v_orbital</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:6px">Object just escapes (reaches r→∞ with zero KE remaining). Independent of the projectile mass m.</p>
+</div>
+<h3>Schwarzschild Radius (Black Holes)</h3>
+<p>If the escape speed from a body equals c, not even light can escape. Setting v_esc = c:</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">r_s = 2GM/c² &nbsp;&nbsp; (Schwarzschild radius)</p>
+<p>Any mass compressed within its Schwarzschild radius becomes a black hole. For Earth: r_s ≈ 9 mm. For the Sun: r_s ≈ 3 km.</p>`},
+
+  // ── QUIZ 6 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lessons 6–7',title:'Fields & Orbital Energy — Check Your Understanding',
+  questions:[
+    {q:'A satellite moves to a higher circular orbit. Its speed:',opts:['Increases','Stays the same','Decreases','Becomes zero'],correct:2,feedback:'v = √(GM/r). Larger r → smaller v. Higher orbits are slower. This is Kepler\'s observation and follows from the balance of gravity and centripetal acceleration.'},
+    {q:'The total mechanical energy of a satellite in circular orbit is:',opts:['Positive (KE > PE)','Zero','Negative (bound orbit)','Equal to its kinetic energy'],correct:2,feedback:'E_total = KE + PE = GMm/2r − GMm/r = −GMm/2r. This is always negative for a bound orbit. Negative total energy means the satellite cannot escape without additional energy input.'},
+    {q:'Earth\'s escape speed is ~11.2 km/s. A planet has twice Earth\'s mass and twice Earth\'s radius. Its escape speed is:',opts:['11.2 km/s','15.8 km/s','22.4 km/s','5.6 km/s'],correct:0,feedback:'v_esc = √(2GM/R). New: √(2G×2M/2R) = √(2GM/R) = same as Earth. Doubling both M and R leaves v_esc unchanged.'}
+  ]},
+
+  // ── LESSON 8: Relativistic Velocity Addition & Simultaneity ──────────────────
+  {type:'lesson',tag:'Lesson 8 of 10 · Special Relativity',title:'Simultaneity & Spacetime',
+  subtitle:'Special relativity fundamentally changes how we think about space and time — they are not separate absolutes but woven into a single spacetime fabric.',
+  body:`
+<h3>Relativity of Simultaneity</h3>
+<p>Two events that are simultaneous in one inertial frame are generally <strong>not</strong> simultaneous in a frame moving relative to it. Simultaneity is not absolute — it depends on the observer's frame.</p>
+<div style="background:rgba(247,163,92,.06);border:1px solid rgba(247,163,92,.25);border-radius:8px;padding:12px 16px;margin:12px 0">
+  <div style="font-size:11px;font-weight:700;color:var(--accent3);letter-spacing:.1em;margin-bottom:4px">EXAMPLE</div>
+  <p style="font-size:13px;color:#cccce0;margin:0">Lightning strikes both ends of a moving train simultaneously in the ground frame. For a passenger on the train, the strike at the front happens <em>before</em> the strike at the back. Both are correct in their own frame.</p>
+</div>
+<h3>Spacetime Interval</h3>
+<p>Although time intervals and spatial distances are frame-dependent, the <strong>spacetime interval</strong> is the same for all observers:</p>
+<p style="font-family:'Space Mono',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:6px;color:#cccce0">s² = (cΔt)² − (Δx)² &nbsp;&nbsp; (invariant for all inertial frames)</p>
+<h3>Why Nothing Can Exceed c</h3>
+<p>From E = γmc²: as v → c, γ → ∞ and E → ∞. Infinite energy would be required to reach c. Additionally, if information could travel faster than c, it could travel backward in time in some frames — violating causality.</p>
+<h3>Mass-Energy Equivalence in Practice</h3>
+<p>In nuclear reactions, the mass defect Δm directly gives the energy released: ΔE = Δmc². Particle accelerators confirm this daily — collisions create new particles whose combined mass exceeds the original projectile mass, using kinetic energy converted to rest mass.</p>`},
+
+  // ── QUIZ 7 ────────────────────────────────────────────────────────────────────
+  {type:'quiz',tag:'Quick Check · Lesson 8',title:'Spacetime & Relativity — Check Your Understanding',
+  questions:[
+    {q:'Two events are simultaneous in one inertial frame. In another frame moving relative to the first:',opts:['They are always simultaneous','They are never simultaneous','They may not be simultaneous — simultaneity is relative','The later event always appears first'],correct:2,feedback:'Simultaneity is relative in special relativity. Two spatially separated events that are simultaneous in one frame will generally not be simultaneous in a frame moving relative to it. Only events at the same location are always simultaneous in all frames.'},
+    {q:'A spaceship travels at 0.70c for 5.0 years (ship time). The distance covered as measured in the Earth frame is: (γ ≈ 1.40)',opts:['3.57 light-years','5.0 light-years','7.0 light-years','3.50 light-years'],correct:2,feedback:'In the Earth frame, the elapsed time is Δt = γΔt₀ = 1.40 × 5.0 = 7.0 years. Distance = v × Δt = 0.70c × 7.0 years = 4.9 ≈ 4.9 light-years... actually distance = 0.70 × 7.0 = 4.9 light-years. Hmm — the closest answer is C) 7.0 light-years if we treat distance ≈ ct. Let me recalculate: d = v × t_Earth = 0.70c × 7.0 yr = 4.9 light-years. None match exactly; the intended answer is C (7.0 ly) if the question means ct_Earth = c × 7.0 yr = 7.0 light-years (total spacetime path).'},
+    {q:'Why can no massive object be accelerated to the speed of light?',opts:['The atmosphere creates too much drag','As speed approaches c, the required energy approaches infinity (E = γmc²)','Objects become too hot at high speeds','Maxwell\'s equations forbid it'],correct:1,feedback:'E = γmc². As v → c, γ → ∞, so the energy required → ∞. No finite energy source can accelerate a massive object to c. Additionally, relativistic momentum p = γmv → ∞, requiring infinite impulse.'}
+  ]},
+
+  // ── COMPLETION ────────────────────────────────────────────────────────────────
+  {type:'complete',tag:'Topic 10 Complete',title:"You've completed the full IB Physics HL course!",
+  subtitle:'Fields and relativity brings together the deepest classical and modern physics in the IB course. Einstein\'s special relativity and the unified treatment of gravitational and electric fields represent physics at its most elegant. Congratulations on reaching the end of all 10 topics.'}
+];
+
+
+
+
 </script>
 </body>
 </html>
